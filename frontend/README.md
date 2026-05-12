@@ -19,7 +19,8 @@ frontend/
 │
 ├── index.html       # Home page: room list, search, register/login
 ├── detail.html      # Room detail page: room info, reviews, booking
-├── admin.html       # Admin page: revenue, orders, coupons
+├── admin.html       # Admin dashboard: revenue, orders, coupons
+├── landlord.html    # Landlord dashboard: owned rooms and bookings
 │
 ├── css/             # UI styles
 │   ├── base.css           # Shared colors, typography, and resets
@@ -61,9 +62,11 @@ frontend/
 ## Demo Admin Account And Testing
 
 ### Frontend Demo
-The app includes an `admin.html` page for management. Access is restricted by demo-only client-side checks.
+The app includes role-based screens for renters, landlords, and admins. Access is restricted by demo-only client-side checks.
 
-- **Open Admin**: log in with the email **"Vu69@gmail.com"**. After login, the admin link appears in the header.
+- **Admin**: log in with `Vu69@gmail.com` / `admin123` to open `admin.html`.
+- **Landlord**: log in with `landlord@example.com` / `landlord123` to open `landlord.html`.
+- **Renter**: log in with `user@example.com` / `user123` or register a normal renter account to stay on the rental pages.
 - **Create Coupon**: go to Admin, use the coupon creation form, enter a code such as `VIP99` and a discount amount, then click Add.
 - **Book A Room**: log in, open a room detail page, click the booking button, select a payment method, optionally apply a coupon, then confirm. Use the admin account to view the created order.
 
@@ -86,6 +89,7 @@ This account is created by `npm run seed` in the backend and is intended only fo
 - Apply discount coupons during booking.
 - Add and view room reviews.
 - Use an admin dashboard for revenue, orders, coupons, and order cleanup.
+- Use a landlord dashboard for owned rooms and related bookings.
 
 ## Important Notes
 - This frontend is a learning/demo project.

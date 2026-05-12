@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requireAdmin = exports.optionalAuth = exports.requireAuth = void 0;
+exports.requireLandlord = exports.requireAdmin = exports.optionalAuth = exports.requireAuth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = require("../models/user.model");
 const env_1 = require("../config/env");
@@ -74,3 +74,11 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 exports.requireAdmin = requireAdmin;
+const requireLandlord = (req, res, next) => {
+    if (!req.user || (req.user.role !== "landlord" && req.user.role !== "admin")) {
+        (0, response_1.sendError)(res, "Bạn không có quyền thực hiện hành động này", null, 403);
+        return;
+    }
+    next();
+};
+exports.requireLandlord = requireLandlord;

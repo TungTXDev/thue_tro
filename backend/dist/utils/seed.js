@@ -16,25 +16,26 @@ const seedData = async () => {
         console.log("Connecting to Database...");
         await (0, database_1.connectDatabase)();
         // 1. Seed Users
-        const userCount = await user_model_1.User.countDocuments();
         let adminId;
-        if (userCount === 0) {
-            console.log("🌱 Seeding Users...");
-            const hashedPassword = await bcrypt_1.default.hash("admin123", 10);
-            const admin = await user_model_1.User.create({
-                name: "Vũ Admin",
-                email: "Vu69@gmail.com",
-                password: hashedPassword,
-                role: "admin",
-            });
-            adminId = admin._id;
-            console.log("✅ Users seeded.");
-        }
-        else {
-            console.log("⏭️ Users collection is not empty. Skipping User seeding.");
-            const admin = await user_model_1.User.findOne({ email: "Vu69@gmail.com" });
-            adminId = admin ? admin._id : new mongoose_1.default.Types.ObjectId();
-        }
+        console.log("🌱 Ensuring demo users...");
+        const hashedPassword = await bcrypt_1.default.hash("admin123", 10);
+        const landlordPassword = await bcrypt_1.default.hash("landlord123", 10);
+        const admin = await user_model_1.User.findOneAndUpdate({ email: "Vu69@gmail.com" }, {
+            name: "Vũ Admin",
+            email: "Vu69@gmail.com",
+            password: hashedPassword,
+            role: "admin",
+            status: "active",
+        }, { upsert: true, new: true });
+        const landlord = await user_model_1.User.findOneAndUpdate({ email: "landlord@example.com" }, {
+            name: "Minh Landlord",
+            email: "landlord@example.com",
+            password: landlordPassword,
+            role: "landlord",
+            status: "active",
+        }, { upsert: true, new: true });
+        adminId = admin._id;
+        console.log("✅ Demo users ready.");
         // 2. Seed Rooms
         const roomCount = await room_model_1.Room.countDocuments();
         let sampleRoomIds = [];

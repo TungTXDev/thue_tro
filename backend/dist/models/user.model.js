@@ -39,7 +39,7 @@ const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String }, // Hashed password
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ["user", "landlord", "admin"], default: "user" },
     phone: { type: String },
     status: { type: String, enum: ["active", "blocked"], default: "active" },
 }, { timestamps: true });

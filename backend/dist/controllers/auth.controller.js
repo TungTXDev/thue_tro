@@ -16,7 +16,7 @@ const generateToken = (id) => {
 };
 const register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
         // Validation
         if (!name || !email || !password) {
             (0, response_1.sendError)(res, "Vui lòng nhập đầy đủ tên, email và mật khẩu", null, 400);
@@ -32,6 +32,7 @@ const register = async (req, res) => {
             (0, response_1.sendError)(res, "Email đã được sử dụng", null, 400);
             return;
         }
+        const normalizedRole = role === "landlord" ? "landlord" : "user";
         // Hash password
         const hashedPassword = await bcrypt_1.default.hash(password, 10);
         // Create user
@@ -39,7 +40,7 @@ const register = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: "user", // Default role
+            role: normalizedRole,
         });
         // Generate token
         const token = generateToken(user._id.toString());

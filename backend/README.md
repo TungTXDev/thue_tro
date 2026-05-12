@@ -74,11 +74,15 @@ npm start
 
 ## Demo Admin Account
 
-After running the seed command, use this admin account to log in and get a token for protected API routes:
+After running the seed command, use these demo accounts to test role-based login:
 
 - **Email:** `Vu69@gmail.com`
 - **Password:** `admin123`
 - **Role:** `admin`
+
+- **Email:** `landlord@example.com`
+- **Password:** `landlord123`
+- **Role:** `landlord`
 
 ## API Testing
 

@@ -15,7 +15,6 @@ const seedData = async () => {
 
     // 1. Seed Users
     let adminId: mongoose.Types.ObjectId;
-    let landlordId: mongoose.Types.ObjectId;
     console.log("🌱 Ensuring demo users...");
     const hashedPassword = await bcrypt.hash("admin123", 10);
     const landlordPassword = await bcrypt.hash("landlord123", 10);
@@ -45,7 +44,6 @@ const seedData = async () => {
     );
 
     adminId = admin._id as mongoose.Types.ObjectId;
-    landlordId = landlord._id as mongoose.Types.ObjectId;
     console.log("✅ Demo users ready.");
 
     // 2. Seed Rooms
