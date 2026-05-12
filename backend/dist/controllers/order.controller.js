@@ -1,60 +1,68 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearOrders = exports.getOrders = exports.createOrder = void 0;
-const order_model_1 = require("../models/order.model");
-const response_1 = require("../utils/response");
+const { Order } = require("../models/order.model");
+const { Room } = require("../models/room.model");
+const { sendSuccess, sendError } = require("../utils/response");
+
 const createOrder = async (req, res) => {
-    try {
-        const { roomId, roomName, originalPrice, discount, couponCode, pricePaid, paymentMethod, } = req.body;
-        if (!roomName || originalPrice === undefined || pricePaid === undefined || !paymentMethod) {
-            (0, response_1.sendError)(res, "Thiếu thông tin bắt buộc để tạo đơn hàng", null, 400);
-            return;
-        }
-        let userId = undefined;
-        let userName = "Khách hàng ẩn danh";
-        if (req.user) {
-            userId = req.user._id;
-            userName = req.user.name;
-        }
-        const order = await order_model_1.Order.create({
-            userId,
-            userName,
-            roomId,
-            roomName,
-            originalPrice,
-            discount,
-            couponCode,
-            pricePaid,
-            paymentMethod,
-            status: "pending", // Default status, could be success depending on payment method
-        });
-        (0, response_1.sendSuccess)(res, "Tạo đơn hàng thành công", { order }, 201);
+  try {
+    const { roomId, roomName, originalPrice, discount = 0, couponCode, pricePaid, paymentMethod } = req.body;
+
+    if (!paymentMethod) {
+      return sendError(res, "paymentMethod is required", null, 400);
     }
-    catch (error) {
-        console.error("Create order error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi tạo đơn hàng", null, 500);
+
+    let room = null;
+    if (roomId) room = await Room.findById(roomId);
+
+    const resolvedRoomName = room ? room.title : roomName;
+    const resolvedOriginalPrice = room ? room.price : originalPrice;
+    const resolvedPricePaid = pricePaid ?? resolvedOriginalPrice;
+
+    if (!resolvedRoomName || resolvedOriginalPrice === undefined || resolvedPricePaid === undefined) {
+      return sendError(res, "Missing required order information", null, 400);
     }
+
+    const order = await Order.create({
+      userId: req.user ? req.user._id : undefined,
+      userName: req.user ? req.user.name : "Guest",
+      roomId: room ? room._id : roomId,
+      roomName: resolvedRoomName,
+      landlordId: room ? room.ownerId : undefined,
+      originalPrice: resolvedOriginalPrice,
+      discount,
+      couponCode,
+      pricePaid: resolvedPricePaid,
+      paymentMethod,
+      status: "success",
+    });
+
+    return sendSuccess(res, "Order created successfully", { order }, 201);
+  } catch (error) {
+    console.error("Create order error:", error);
+    return sendError(res, "Server error while creating order", null, 500);
+  }
 };
-exports.createOrder = createOrder;
+
 const getOrders = async (req, res) => {
-    try {
-        const orders = await order_model_1.Order.find().sort({ createdAt: -1 });
-        (0, response_1.sendSuccess)(res, "Lấy danh sách đơn hàng thành công", { orders });
-    }
-    catch (error) {
-        console.error("Get orders error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi lấy danh sách đơn hàng", null, 500);
-    }
+  try {
+    const query = {};
+    if (req.user && req.user.role === "landlord") query.landlordId = req.user._id;
+
+    const orders = await Order.find(query).sort({ createdAt: -1 });
+    return sendSuccess(res, "Orders fetched successfully", { orders });
+  } catch (error) {
+    console.error("Get orders error:", error);
+    return sendError(res, "Server error while fetching orders", null, 500);
+  }
 };
-exports.getOrders = getOrders;
+
 const clearOrders = async (req, res) => {
-    try {
-        await order_model_1.Order.deleteMany({});
-        (0, response_1.sendSuccess)(res, "Đã xóa toàn bộ lịch sử đơn hàng thành công", null);
-    }
-    catch (error) {
-        console.error("Clear orders error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi xóa lịch sử đơn hàng", null, 500);
-    }
+  try {
+    await Order.deleteMany({});
+    return sendSuccess(res, "Orders cleared successfully", null);
+  } catch (error) {
+    console.error("Clear orders error:", error);
+    return sendError(res, "Server error while clearing orders", null, 500);
+  }
 };
-exports.clearOrders = clearOrders;
+
+module.exports = { createOrder, getOrders, clearOrders };

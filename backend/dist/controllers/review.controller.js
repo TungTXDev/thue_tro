@@ -1,55 +1,37 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createReview = exports.getReviewsByRoomId = void 0;
-const review_model_1 = require("../models/review.model");
-const response_1 = require("../utils/response");
+const { Review } = require("../models/review.model");
+const { sendSuccess, sendError } = require("../utils/response");
+
 const getReviewsByRoomId = async (req, res) => {
-    try {
-        const { roomId } = req.params;
-        const reviews = await review_model_1.Review.find({ roomId }).sort({ createdAt: -1 });
-        (0, response_1.sendSuccess)(res, "Lấy danh sách đánh giá thành công", { reviews });
-    }
-    catch (error) {
-        console.error("Get reviews error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi lấy danh sách đánh giá", null, 500);
-    }
+  try {
+    const reviews = await Review.find({ roomId: req.params.roomId }).sort({ createdAt: -1 });
+    return sendSuccess(res, "Reviews fetched successfully", { reviews });
+  } catch (error) {
+    console.error("Get reviews error:", error);
+    return sendError(res, "Server error while fetching reviews", null, 500);
+  }
 };
-exports.getReviewsByRoomId = getReviewsByRoomId;
+
 const createReview = async (req, res) => {
-    try {
-        const { roomId, stars, content } = req.body;
-        // Validation
-        if (!roomId) {
-            (0, response_1.sendError)(res, "Mã phòng (roomId) là bắt buộc", null, 400);
-            return;
-        }
-        if (!stars || stars < 1 || stars > 5) {
-            (0, response_1.sendError)(res, "Số sao phải từ 1 đến 5", null, 400);
-            return;
-        }
-        if (!content) {
-            (0, response_1.sendError)(res, "Nội dung đánh giá là bắt buộc", null, 400);
-            return;
-        }
-        // Determine user info from optionalAuth
-        let userId = undefined;
-        let userName = "Khách hàng ẩn danh";
-        if (req.user) {
-            userId = req.user._id;
-            userName = req.user.name;
-        }
-        const review = await review_model_1.Review.create({
-            roomId,
-            userId,
-            userName,
-            stars,
-            content,
-        });
-        (0, response_1.sendSuccess)(res, "Đánh giá thành công", { review }, 201);
-    }
-    catch (error) {
-        console.error("Create review error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi tạo đánh giá", null, 500);
-    }
+  try {
+    const { roomId, stars, content } = req.body;
+
+    if (!roomId) return sendError(res, "roomId is required", null, 400);
+    if (!stars || stars < 1 || stars > 5) return sendError(res, "stars must be from 1 to 5", null, 400);
+    if (!content) return sendError(res, "Review content is required", null, 400);
+
+    const review = await Review.create({
+      roomId,
+      userId: req.user ? req.user._id : undefined,
+      userName: req.user ? req.user.name : "Guest",
+      stars,
+      content,
+    });
+
+    return sendSuccess(res, "Review created successfully", { review }, 201);
+  } catch (error) {
+    console.error("Create review error:", error);
+    return sendError(res, "Server error while creating review", null, 500);
+  }
 };
-exports.createReview = createReview;
+
+module.exports = { getReviewsByRoomId, createReview };

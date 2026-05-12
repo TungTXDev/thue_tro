@@ -1,54 +1,52 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRevenue = exports.getDashboardStats = void 0;
-const order_model_1 = require("../models/order.model");
-const room_model_1 = require("../models/room.model");
-const coupon_model_1 = require("../models/coupon.model");
-const response_1 = require("../utils/response");
+const { Order } = require("../models/order.model");
+const { Room } = require("../models/room.model");
+const { Coupon } = require("../models/coupon.model");
+const { User } = require("../models/user.model");
+const { sendSuccess, sendError } = require("../utils/response");
+
 const getDashboardStats = async (req, res) => {
-    try {
-        const totalOrders = await order_model_1.Order.countDocuments();
-        const totalRooms = await room_model_1.Room.countDocuments({ status: { $ne: "deleted" } });
-        const totalCoupons = await coupon_model_1.Coupon.countDocuments();
-        // Calculate total revenue
-        const orders = await order_model_1.Order.find();
-        const totalRevenue = orders.reduce((sum, order) => sum + (order.pricePaid || 0), 0);
-        // Get recent orders
-        const recentOrders = await order_model_1.Order.find().sort({ createdAt: -1 }).limit(5);
-        (0, response_1.sendSuccess)(res, "Lấy thống kê dashboard thành công", {
-            totalRevenue,
-            totalOrders,
-            totalRooms,
-            totalCoupons,
-            recentOrders,
-        });
-    }
-    catch (error) {
-        console.error("Get dashboard stats error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi lấy thống kê dashboard", null, 500);
-    }
+  try {
+    const [totalOrders, totalRooms, totalCoupons, totalUsers, orders, recentOrders] = await Promise.all([
+      Order.countDocuments(),
+      Room.countDocuments({ status: { $ne: "deleted" } }),
+      Coupon.countDocuments(),
+      User.countDocuments(),
+      Order.find(),
+      Order.find().sort({ createdAt: -1 }).limit(5),
+    ]);
+
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.pricePaid || 0), 0);
+
+    return sendSuccess(res, "Dashboard stats fetched successfully", {
+      totalRevenue,
+      totalOrders,
+      totalRooms,
+      totalCoupons,
+      totalUsers,
+      recentOrders,
+    });
+  } catch (error) {
+    console.error("Get dashboard stats error:", error);
+    return sendError(res, "Server error while fetching dashboard stats", null, 500);
+  }
 };
-exports.getDashboardStats = getDashboardStats;
+
 const getRevenue = async (req, res) => {
-    try {
-        const orders = await order_model_1.Order.find();
-        const totalRevenue = orders.reduce((sum, order) => sum + (order.pricePaid || 0), 0);
-        // Optionally group by date (simple approach)
-        const revenueByDate = {};
-        orders.forEach(order => {
-            const dateStr = order.createdAt.toISOString().split('T')[0];
-            if (!revenueByDate[dateStr])
-                revenueByDate[dateStr] = 0;
-            revenueByDate[dateStr] += order.pricePaid || 0;
-        });
-        (0, response_1.sendSuccess)(res, "Lấy doanh thu thành công", {
-            totalRevenue,
-            revenueByDate,
-        });
-    }
-    catch (error) {
-        console.error("Get revenue error:", error);
-        (0, response_1.sendError)(res, "Lỗi máy chủ khi lấy doanh thu", null, 500);
-    }
+  try {
+    const orders = await Order.find();
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.pricePaid || 0), 0);
+    const revenueByDate = {};
+
+    orders.forEach((order) => {
+      const date = order.createdAt.toISOString().split("T")[0];
+      revenueByDate[date] = (revenueByDate[date] || 0) + (order.pricePaid || 0);
+    });
+
+    return sendSuccess(res, "Revenue fetched successfully", { totalRevenue, revenueByDate });
+  } catch (error) {
+    console.error("Get revenue error:", error);
+    return sendError(res, "Server error while fetching revenue", null, 500);
+  }
 };
-exports.getRevenue = getRevenue;
+
+module.exports = { getDashboardStats, getRevenue };

@@ -1,148 +1,134 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const database_1 = require("../config/database");
-const user_model_1 = require("../models/user.model");
-const room_model_1 = require("../models/room.model");
-const review_model_1 = require("../models/review.model");
-const coupon_model_1 = require("../models/coupon.model");
-const order_model_1 = require("../models/order.model");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const { connectDatabase } = require("../config/database");
+const { User } = require("../models/user.model");
+const { Room } = require("../models/room.model");
+const { Review } = require("../models/review.model");
+const { Coupon } = require("../models/coupon.model");
+const { Order } = require("../models/order.model");
+
 const seedData = async () => {
-    try {
-        console.log("Connecting to Database...");
-        await (0, database_1.connectDatabase)();
-        // 1. Seed Users
-        let adminId;
-        console.log("🌱 Ensuring demo users...");
-        const hashedPassword = await bcrypt_1.default.hash("admin123", 10);
-        const landlordPassword = await bcrypt_1.default.hash("landlord123", 10);
-        const admin = await user_model_1.User.findOneAndUpdate({ email: "Vu69@gmail.com" }, {
-            name: "Vũ Admin",
-            email: "Vu69@gmail.com",
-            password: hashedPassword,
-            role: "admin",
-            status: "active",
-        }, { upsert: true, new: true });
-        const landlord = await user_model_1.User.findOneAndUpdate({ email: "landlord@example.com" }, {
-            name: "Minh Landlord",
-            email: "landlord@example.com",
-            password: landlordPassword,
-            role: "landlord",
-            status: "active",
-        }, { upsert: true, new: true });
-        adminId = admin._id;
-        console.log("✅ Demo users ready.");
-        // 2. Seed Rooms
-        const roomCount = await room_model_1.Room.countDocuments();
-        let sampleRoomIds = [];
-        if (roomCount === 0) {
-            console.log("🌱 Seeding Rooms...");
-            const roomsToInsert = [];
-            const categories = ["KTX", "Phòng trọ", "Chung cư mini", "Nhà nguyên căn"];
-            const districts = ["Quận 1", "Quận 3", "Quận 7", "Bình Thạnh", "Gò Vấp", "Thủ Đức"];
-            const amenitiesList = ["Wifi", "Máy lạnh", "Tủ lạnh", "Máy giặt", "Chỗ để xe", "Bảo vệ 24/7"];
-            for (let i = 1; i <= 40; i++) {
-                const category = categories[i % categories.length];
-                const district = districts[i % districts.length];
-                const price = Math.floor(Math.random() * 3000000) + 1000000; // 1tr - 4tr
-                // Random 3 amenities
-                const randomAmenities = [...amenitiesList].sort(() => 0.5 - Math.random()).slice(0, 3);
-                roomsToInsert.push({
-                    title: `Phòng ${category} cao cấp ${i} tại ${district}`,
-                    category,
-                    price,
-                    district,
-                    image: `https://picsum.photos/seed/room${i}/800/600`,
-                    description: `Đây là một ${category} tuyệt vời tại ${district}. Căn phòng sạch sẽ, an ninh và đầy đủ tiện nghi cơ bản. Phù hợp cho sinh viên và người đi làm.`,
-                    amenities: randomAmenities,
-                    ownerId: landlord._id,
-                    ownerName: landlord.name,
-                    status: "available",
-                });
-            }
-            const insertedRooms = await room_model_1.Room.insertMany(roomsToInsert);
-            sampleRoomIds = insertedRooms.map(r => r._id);
-            console.log("✅ Rooms seeded.");
-        }
-        else {
-            console.log("⏭️ Rooms collection is not empty. Skipping Room seeding.");
-            const rooms = await room_model_1.Room.find().limit(5);
-            sampleRoomIds = rooms.map(r => r._id);
-        }
-        // 3. Seed Coupons
-        const couponCount = await coupon_model_1.Coupon.countDocuments();
-        if (couponCount === 0) {
-            console.log("🌱 Seeding Coupons...");
-            await coupon_model_1.Coupon.insertMany([
-                { code: "DIS500", value: 500000, active: true, usageLimit: 100 },
-                { code: "HELLO2026", value: 200000, active: true, usageLimit: 500 },
-                { code: "HOLARENTAL", value: 1000000, active: true, usageLimit: 50 },
-            ]);
-            console.log("✅ Coupons seeded.");
-        }
-        else {
-            console.log("⏭️ Coupons collection is not empty. Skipping Coupon seeding.");
-        }
-        // 4. Seed Reviews
-        const reviewCount = await review_model_1.Review.countDocuments();
-        if (reviewCount === 0 && sampleRoomIds.length > 0) {
-            console.log("🌱 Seeding Reviews...");
-            const reviewsToInsert = [];
-            for (let i = 0; i < 10; i++) {
-                const roomId = sampleRoomIds[i % sampleRoomIds.length];
-                reviewsToInsert.push({
-                    roomId,
-                    userId: adminId,
-                    userName: "Người dùng ẩn danh",
-                    stars: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
-                    content: "Phòng rất đẹp và sạch sẽ, chủ nhà thân thiện. Tôi rất hài lòng khi thuê ở đây.",
-                });
-            }
-            await review_model_1.Review.insertMany(reviewsToInsert);
-            console.log("✅ Reviews seeded.");
-        }
-        else {
-            console.log("⏭️ Reviews collection is not empty or no rooms available. Skipping Review seeding.");
-        }
-        // 5. Seed Orders
-        const orderCount = await order_model_1.Order.countDocuments();
-        if (orderCount === 0 && sampleRoomIds.length > 0) {
-            console.log("🌱 Seeding Orders...");
-            const ordersToInsert = [];
-            for (let i = 0; i < 5; i++) {
-                const roomId = sampleRoomIds[i % sampleRoomIds.length];
-                const room = await room_model_1.Room.findById(roomId);
-                if (room) {
-                    ordersToInsert.push({
-                        userId: adminId,
-                        userName: "Vũ Admin",
-                        roomId: room._id,
-                        roomName: room.title,
-                        landlordId: landlord._id,
-                        originalPrice: room.price,
-                        discount: 0,
-                        pricePaid: room.price,
-                        paymentMethod: "cash",
-                        status: "success",
-                    });
-                }
-            }
-            await order_model_1.Order.insertMany(ordersToInsert);
-            console.log("✅ Orders seeded.");
-        }
-        else {
-            console.log("⏭️ Orders collection is not empty or no rooms available. Skipping Order seeding.");
-        }
-        console.log("🎉 Seeding completed successfully!");
-        process.exit(0);
+  try {
+    console.log("Connecting to database...");
+    await connectDatabase();
+
+    console.log("Ensuring demo users...");
+    const adminPassword = await bcrypt.hash("admin123", 10);
+    const landlordPassword = await bcrypt.hash("landlord123", 10);
+
+    const admin = await User.findOneAndUpdate(
+      { email: "Vu69@gmail.com" },
+      {
+        name: "Vu Admin",
+        email: "Vu69@gmail.com",
+        password: adminPassword,
+        role: "admin",
+        status: "active",
+      },
+      { upsert: true, new: true }
+    );
+
+    const landlord = await User.findOneAndUpdate(
+      { email: "landlord@example.com" },
+      {
+        name: "Minh Landlord",
+        email: "landlord@example.com",
+        password: landlordPassword,
+        role: "landlord",
+        status: "active",
+      },
+      { upsert: true, new: true }
+    );
+
+    const roomCount = await Room.countDocuments();
+    let sampleRoomIds = [];
+
+    if (roomCount === 0) {
+      console.log("Seeding rooms...");
+      const categories = ["KTX", "Phong tro", "Chung cu mini", "Nha nguyen can"];
+      const districts = ["Quan 1", "Quan 3", "Quan 7", "Binh Thanh", "Go Vap", "Thu Duc"];
+      const amenitiesList = ["Wifi", "May lanh", "Tu lanh", "May giat", "Cho de xe", "Bao ve 24/7"];
+      const roomsToInsert = [];
+
+      for (let i = 1; i <= 40; i++) {
+        const category = categories[i % categories.length];
+        const district = districts[i % districts.length];
+        const randomAmenities = [...amenitiesList].sort(() => 0.5 - Math.random()).slice(0, 3);
+
+        roomsToInsert.push({
+          title: `${category} cao cap ${i} tai ${district}`,
+          category,
+          price: Math.floor(Math.random() * 3000000) + 1000000,
+          district,
+          image: `https://picsum.photos/seed/room${i}/800/600`,
+          description: `Phong ${category} tai ${district}, sach se va day du tien nghi co ban.`,
+          amenities: randomAmenities,
+          ownerId: landlord._id,
+          ownerName: landlord.name,
+          status: "available",
+        });
+      }
+
+      const insertedRooms = await Room.insertMany(roomsToInsert);
+      sampleRoomIds = insertedRooms.map((room) => room._id);
+    } else {
+      const rooms = await Room.find().limit(5);
+      sampleRoomIds = rooms.map((room) => room._id);
     }
-    catch (error) {
-        console.error("❌ Error seeding database:", error);
-        process.exit(1);
+
+    if ((await Coupon.countDocuments()) === 0) {
+      console.log("Seeding coupons...");
+      await Coupon.insertMany([
+        { code: "DIS500", value: 500000, active: true, usageLimit: 100 },
+        { code: "HELLO2026", value: 200000, active: true, usageLimit: 500 },
+        { code: "HOLARENTAL", value: 1000000, active: true, usageLimit: 50 },
+      ]);
     }
+
+    if ((await Review.countDocuments()) === 0 && sampleRoomIds.length > 0) {
+      console.log("Seeding reviews...");
+      const reviewsToInsert = sampleRoomIds.slice(0, 10).map((roomId) => ({
+        roomId,
+        userId: admin._id,
+        userName: "Demo User",
+        stars: 5,
+        content: "Phong sach se, vi tri tot va chu nha than thien.",
+      }));
+      await Review.insertMany(reviewsToInsert);
+    }
+
+    if ((await Order.countDocuments()) === 0 && sampleRoomIds.length > 0) {
+      console.log("Seeding orders...");
+      const ordersToInsert = [];
+
+      for (const roomId of sampleRoomIds.slice(0, 5)) {
+        const room = await Room.findById(roomId);
+        if (!room) continue;
+
+        ordersToInsert.push({
+          userId: admin._id,
+          userName: admin.name,
+          roomId: room._id,
+          roomName: room.title,
+          landlordId: landlord._id,
+          originalPrice: room.price,
+          discount: 0,
+          pricePaid: room.price,
+          paymentMethod: "cash",
+          status: "success",
+        });
+      }
+
+      await Order.insertMany(ordersToInsert);
+    }
+
+    console.log("Seeding completed successfully.");
+    await mongoose.disconnect();
+    process.exit(0);
+  } catch (error) {
+    console.error("Error seeding database:", error);
+    process.exit(1);
+  }
 };
+
 seedData();
