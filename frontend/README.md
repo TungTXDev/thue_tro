@@ -5,6 +5,7 @@ Một dự án frontend website mô phỏng nền tảng tìm kiếm và thuê p
 ## 🚀 Công Nghệ Sử Dụng
 - **HTML5** (Semantics layout)
 - **CSS3** (Flexbox, Grid, Custom Properties, không dùng thư viện ngoài)
+- **Bootstrap 5** (Grid, form, button, card, table responsive)
 - **JavaScript thuần** (Vanilla JS, thao tác DOM, Events)
 - **Cơ sở dữ liệu**: Trình duyệt `localStorage` (lưu trữ không cần backend)
 

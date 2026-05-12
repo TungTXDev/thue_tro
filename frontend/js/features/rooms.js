@@ -32,16 +32,16 @@ async function renderRooms(dataToRender = null) {
         const priceFormatted = formatVND(room.price);
 
         const cardHTML = `
-            <div class="card">
+            <div class="card h-100 shadow-sm">
                 <a href="detail.html?id=${room.id}">
-                    <img src="${escapeHTML(room.image)}" alt="Ảnh phòng" class="cursor-pointer">
+                    <img src="${escapeHTML(room.image)}" alt="Ảnh phòng" class="card-img-top cursor-pointer">
                 </a>
                 <div class="card-body">
-                    <span class="card-category">${escapeHTML(room.category)}</span>
+                    <span class="card-category badge text-bg-warning">${escapeHTML(room.category)}</span>
                     <h3 class="card-title">${escapeHTML(room.title)}</h3>
                     <p class="card-location">📍 ${escapeHTML(room.district)}</p>
                     <div class="card-price">${priceFormatted}<span class="price-format"> / tháng</span></div>
-                    <a href="detail.html?id=${room.id}" class="btn-detail">Xem chi tiết</a>
+                    <a href="detail.html?id=${room.id}" class="btn-detail btn btn-outline-primary btn-sm">Xem chi tiết</a>
                 </div>
             </div>
         `;

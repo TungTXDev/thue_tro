@@ -11,7 +11,7 @@ body { background-color: #f4f7f6; padding: 30px; }
 .order-section { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
 
 /* Coupon Section */
-.coupon-box { display: flex; gap: 10px; margin-top: 15px; }
+.coupon-box { margin-top: 15px; }
 .coupon-box input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
 .coupon-box .btn { background: #1877f2; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
@@ -19,4 +19,3 @@ body { background-color: #f4f7f6; padding: 30px; }
 .coupon-list { margin-top: 10px; font-size: 13px; color: #1877f2; }
 .btn-clear { color: red; background: none; border: none; cursor: pointer; font-size: 12px; }
 .order-price { color: #e41e3f; font-weight: bold; }
-

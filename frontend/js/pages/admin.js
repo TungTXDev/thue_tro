@@ -49,7 +49,7 @@ async function loadAdminData() {
                 <td><strong>${escapeHTML(userName || 'N/A')}</strong></td>
                 <td>${escapeHTML(roomName || 'N/A')}</td>
                 <td class="order-price">${formatVND(pricePaid)}</td>
-                <td><span class="status-tag">Thành công</span></td>
+                <td><span class="status-tag badge text-bg-success">Thành công</span></td>
             </tr>
         `;
     });

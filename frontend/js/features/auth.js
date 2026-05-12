@@ -93,8 +93,8 @@ function updateHeader() {
     // 1. Xóa các nút cũ trong menu để tránh bị lặp khi load lại
     // Giữ lại các mục mặc định (Trang chủ, Tìm phòng...)
     navLinks.innerHTML = `
-        <li><a href="index.html">Trang chủ</a></li>
-        <li><a href="#room-grid">Tìm phòng</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link">Trang chủ</a></li>
+        <li class="nav-item"><a href="#room-grid" class="nav-link">Tìm phòng</a></li>
         <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">Hỗ trợ ▾</a>
             <div class="dropdown-content">
@@ -107,13 +107,13 @@ function updateHeader() {
     if (savedUser) {
         // 2. KIỂM TRA QUYỀN ADMIN: 
         if (savedUser.name.includes("Vũ") || savedUser.email === "Vu69@gmail.com") {
-            navLinks.innerHTML += `<li><a href="admin.html" class="admin-link">📊 Quản lý</a></li>`;
+            navLinks.innerHTML += `<li class="nav-item"><a href="admin.html" class="admin-link nav-link">📊 Quản lý</a></li>`;
         }
 
         // 3. Hiển thị lời chào và nút Đăng xuất
         userIconsDiv.innerHTML = `
             <span class="welcome-text">👋 Chào, ${escapeHTML(savedUser.name)}!</span>
-            <a href="javascript:void(0)" onclick="logout()" class="btn-danger">Đăng xuất</a>
+            <a href="javascript:void(0)" onclick="logout()" class="btn btn-danger btn-sm">Đăng xuất</a>
         `;
         
         // Ẩn khung đăng ký ở cuối trang
@@ -121,7 +121,7 @@ function updateHeader() {
     } else {
         // 4. Nếu chưa đăng nhập -> Hiện nút Đăng ký ban đầu
         userIconsDiv.innerHTML = `
-            <a href="#auth-section" class="btn btn-header">Đăng ký / Đăng nhập</a>
+            <a href="#auth-section" class="btn btn-primary btn-header">Đăng ký / Đăng nhập</a>
         `;
         if(authSection) authSection.style.display = 'block';
     }

@@ -54,10 +54,8 @@
 }
 
 .filter-bar {
-    display: flex;
     justify-content: center;
     margin-bottom: 30px;
-    gap: 15px;
 }
 
 .filter-bar input,
@@ -67,7 +65,7 @@
     border-radius: 5px;
     outline: none;
     background: white;
-    width: 250px;
+    width: 100%;
 }
 
 .room-grid {
