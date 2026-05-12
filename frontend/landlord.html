@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Thuê Phòng Trọ</title>
+    <title>Landlord Dashboard - Thuê Phòng Trọ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
@@ -13,17 +13,16 @@
 </head>
 <body class="dashboard-body">
 <div class="dashboard-shell">
-    <aside class="dashboard-sidebar">
+    <aside class="dashboard-sidebar landlord-sidebar">
         <a href="index.html" class="dashboard-brand">
             <i class="bi bi-buildings"></i>
             <span>Thuê Phòng</span>
         </a>
-        <div class="sidebar-label">Admin</div>
+        <div class="sidebar-label">Chủ trọ</div>
         <nav class="sidebar-nav">
             <a href="#overview" class="active"><i class="bi bi-speedometer2"></i> Tổng quan</a>
-            <a href="#coupons"><i class="bi bi-ticket-perforated"></i> Mã giảm giá</a>
-            <a href="#orders"><i class="bi bi-receipt"></i> Đơn đặt phòng</a>
-            <a href="landlord.html"><i class="bi bi-houses"></i> Màn chủ trọ</a>
+            <a href="#rooms"><i class="bi bi-houses"></i> Phòng của tôi</a>
+            <a href="#orders"><i class="bi bi-calendar-check"></i> Lịch đặt xem</a>
             <a href="index.html"><i class="bi bi-house-door"></i> Trang thuê trọ</a>
         </nav>
         <button onclick="logout()" class="btn btn-outline-light w-100 mt-auto">
@@ -34,63 +33,52 @@
     <main class="dashboard-main">
         <div class="dashboard-topbar">
             <div>
-                <p class="dashboard-kicker">Admin dashboard</p>
-                <h1>Quản trị hệ thống</h1>
+                <p class="dashboard-kicker">Landlord dashboard</p>
+                <h1>Quản lý phòng trọ</h1>
             </div>
             <div class="dashboard-user">
                 <i class="bi bi-person-circle"></i>
-                <span id="dashboard-user-name">Admin</span>
+                <span id="dashboard-user-name">Chủ trọ</span>
             </div>
         </div>
 
         <section id="overview" class="dashboard-grid">
             <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-cash-coin"></i></span>
-                <p>Tổng doanh thu</p>
-                <div id="total-revenue" class="stat-val">0đ</div>
+                <span class="metric-icon"><i class="bi bi-houses"></i></span>
+                <p>Phòng đang quản lý</p>
+                <div id="landlord-total-rooms" class="stat-val">0</div>
             </div>
             <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-receipt"></i></span>
-                <p>Tổng đơn đặt phòng</p>
-                <div id="total-orders" class="stat-val">0</div>
+                <span class="metric-icon"><i class="bi bi-check-circle"></i></span>
+                <p>Phòng còn trống</p>
+                <div id="landlord-available-rooms" class="stat-val">0</div>
             </div>
             <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-ticket-perforated"></i></span>
-                <p>Mã giảm giá đang chạy</p>
-                <div id="total-coupons" class="stat-val">0</div>
+                <span class="metric-icon"><i class="bi bi-calendar-check"></i></span>
+                <p>Đơn liên quan</p>
+                <div id="landlord-total-orders" class="stat-val">0</div>
             </div>
         </section>
 
-        <section id="coupons" class="dashboard-panel">
+        <section id="rooms" class="dashboard-panel">
             <div class="panel-header">
                 <div>
-                    <p class="dashboard-kicker">Coupons</p>
-                    <h2>Tạo mã giảm giá mới</h2>
+                    <p class="dashboard-kicker">Rooms</p>
+                    <h2>Phòng của tôi</h2>
                 </div>
+                <button class="btn btn-primary btn-sm" onclick="alert('Tính năng đăng phòng sẽ được bổ sung ở bước tiếp theo.')">
+                    <i class="bi bi-plus-circle"></i> Thêm phòng
+                </button>
             </div>
-            <div class="coupon-box row g-2">
-                <div class="col-12 col-md">
-                    <input type="text" id="cp-code" class="form-control" placeholder="Mã (VD: DIS500)">
-                </div>
-                <div class="col-12 col-md">
-                    <input type="number" id="cp-val" class="form-control" placeholder="Số tiền giảm">
-                </div>
-                <div class="col-12 col-md-auto">
-                    <button class="btn btn-primary w-100" onclick="addCoupon()">Thêm</button>
-                </div>
-            </div>
-            <div id="coupon-list" class="coupon-list"></div>
+            <div id="landlord-room-list" class="landlord-room-list"></div>
         </section>
 
         <section id="orders" class="dashboard-panel">
             <div class="panel-header">
                 <div>
-                    <p class="dashboard-kicker">Orders</p>
-                    <h2>Danh sách khách đặt phòng</h2>
+                    <p class="dashboard-kicker">Bookings</p>
+                    <h2>Lịch đặt xem phòng</h2>
                 </div>
-                <button onclick="clearOrders()" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-trash3"></i> Xóa lịch sử
-                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -103,7 +91,7 @@
                             <th>Trạng thái</th>
                         </tr>
                     </thead>
-                    <tbody id="order-table-body"></tbody>
+                    <tbody id="landlord-order-table-body"></tbody>
                 </table>
             </div>
         </section>
@@ -114,11 +102,8 @@
 <script src="js/core/storage.js"></script>
 <script src="js/core/utils.js"></script>
 <script src="js/core/apiClient.js"></script>
-<script src="js/services/couponApi.js"></script>
-<script src="js/services/orderApi.js"></script>
-<script src="js/services/adminApi.js"></script>
+<script src="js/services/roomApi.js"></script>
 <script src="js/features/auth.js"></script>
-<script src="js/features/coupons.js"></script>
-<script src="js/pages/admin.js"></script>
+<script src="js/pages/landlord.js"></script>
 </body>
 </html>
