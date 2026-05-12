@@ -5,7 +5,7 @@ The project is split into two separate parts:
 ```text
 thue_tro/
 ├── frontend/   # HTML/CSS/JavaScript user interface
-└── backend/    # Node.js/Express/TypeScript API
+└── backend/    # Node.js/Express JavaScript API
 ```
 
 ## Run The Frontend

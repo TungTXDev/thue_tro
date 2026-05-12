@@ -4,7 +4,7 @@ This is the backend source code for the student room rental system. It provides 
 
 ## Tech Stack
 - **Node.js & Express.js:** API framework.
-- **TypeScript:** Main programming language for safer, more maintainable code.
+- **JavaScript:** Main programming language for the API source.
 - **MongoDB & Mongoose:** Flexible NoSQL database and ODM.
 - **Bcrypt:** Password hashing.
 - **JSON Web Token (JWT):** Authentication and role-based access.
@@ -19,12 +19,10 @@ backend/
 │   ├── middlewares/   # Middleware such as requireAuth and requireAdmin
 │   ├── models/        # Mongoose schemas and models
 │   ├── routes/        # API route definitions
-│   ├── types/         # TypeScript type extensions
 │   ├── utils/         # Helpers such as responses and seed data
-│   ├── app.ts         # Express app setup
-│   └── server.ts      # Entry point that starts the server
+│   ├── app.js         # Express app setup
+│   └── server.js      # Entry point that starts the server
 ├── package.json       # Dependencies and scripts
-└── tsconfig.json      # TypeScript configuration
 ```
 
 ## Setup And Run
@@ -59,16 +57,15 @@ npm run seed
 
 ### 4. Run In Development
 
-The development script uses `tsx` and restarts automatically when source files change:
+The development script uses Node's watch mode and restarts automatically when source files change:
 
 ```bash
 npm run dev
 ```
 
-### 5. Build And Run In Production
+### 5. Run In Production
 
 ```bash
-npm run build
 npm start
 ```
 
