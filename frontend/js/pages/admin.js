@@ -1,9 +1,9 @@
-// KIỂM TRA BẢO MẬT KHI VÀO TRANG ADMIN
 const checkUser = getStorage(STORAGE_KEYS.CURRENT_USER);
+const checkRole = typeof getUserRole === "function" ? getUserRole(checkUser) : (checkUser && checkUser.role);
 
-if (!checkUser || (!checkUser.name.includes("Vũ") && checkUser.email !== "Vu69@gmail.com")) {
-    alert("CẢNH BÁO: Bạn không có quyền truy cập khu vực này!");
-    window.location.href = "index.html"; // Đá văng ra trang chủ ngay lập tức
+if (!checkUser || checkRole !== "admin") {
+    alert("Bạn không có quyền truy cập màn Admin.");
+    window.location.href = "index.html";
 }
 
 async function loadAdminData() {
@@ -60,10 +60,25 @@ async function loadAdminData() {
         revDisplay.innerText = formatVND(totalRev);
     }
 
+    const totalOrders = document.getElementById('total-orders');
+    if (totalOrders) {
+        totalOrders.innerText = orders.length;
+    }
+
+    const totalCoupons = document.getElementById('total-coupons');
+    if (totalCoupons) {
+        totalCoupons.innerText = coupons.length;
+    }
+
+    const dashboardUserName = document.getElementById('dashboard-user-name');
+    if (dashboardUserName) {
+        dashboardUserName.innerText = checkUser.name || 'Admin';
+    }
+
     // 3. Hiển thị danh sách mã giảm giá
     const couponList = document.getElementById('coupon-list');
     if (couponList) {
-        couponList.innerText = "Mã đang chạy: " + coupons.map(c => c.code).join(', ');
+        couponList.innerText = coupons.length ? "Mã đang chạy: " + coupons.map(c => c.code).join(', ') : "Chưa có mã giảm giá.";
     }
 }
 
