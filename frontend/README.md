@@ -63,9 +63,9 @@ frontend/
 ### Frontend Demo
 The app includes an `admin.html` page for management. Access is restricted by demo-only client-side checks.
 
-- **Open Admin**: register or log in with a name containing **"Vũ"** or with the email **"Vu69@gmail.com"**. After login, the **Quản lý** link appears in the header.
-- **Create Coupon**: go to Admin, find "Tạo Mã Giảm Giá Mới", enter a code such as `VIP99` and a discount amount, then click Add.
-- **Book A Room**: log in, open a room detail page, click "Đặt phòng ngay", select a payment method, optionally apply a coupon, then confirm. Use the admin account to view the created order.
+- **Open Admin**: log in with the email **"Vu69@gmail.com"**. After login, the admin link appears in the header.
+- **Create Coupon**: go to Admin, use the coupon creation form, enter a code such as `VIP99` and a discount amount, then click Add.
+- **Book A Room**: log in, open a room detail page, click the booking button, select a payment method, optionally apply a coupon, then confirm. Use the admin account to view the created order.
 
 ### Backend API
 For API endpoints that require admin access, such as `GET /api/users`, log in with this seeded demo account:
