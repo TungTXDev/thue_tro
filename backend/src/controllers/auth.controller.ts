@@ -13,7 +13,7 @@ const generateToken = (id: string) => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Validation
     if (!name || !email || !password) {
@@ -33,6 +33,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const normalizedRole = role === "landlord" ? "landlord" : "user";
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -41,7 +43,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       name,
       email,
       password: hashedPassword,
-      role: "user", // Default role
+      role: normalizedRole,
     });
 
     // Generate token

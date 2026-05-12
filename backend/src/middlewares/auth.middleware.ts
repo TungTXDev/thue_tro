@@ -81,3 +81,15 @@ export const requireAdmin = (
   }
   next();
 };
+
+export const requireLandlord = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (!req.user || (req.user.role !== "landlord" && req.user.role !== "admin")) {
+    sendError(res, "Bạn không có quyền thực hiện hành động này", null, 403);
+    return;
+  }
+  next();
+};

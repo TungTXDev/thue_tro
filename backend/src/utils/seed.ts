@@ -16,21 +16,32 @@ const seedData = async () => {
     // 1. Seed Users
     const userCount = await User.countDocuments();
     let adminId: mongoose.Types.ObjectId;
+    let landlordId: mongoose.Types.ObjectId;
     if (userCount === 0) {
       console.log("🌱 Seeding Users...");
       const hashedPassword = await bcrypt.hash("admin123", 10);
+      const landlordPassword = await bcrypt.hash("landlord123", 10);
       const admin = await User.create({
         name: "Vũ Admin",
         email: "Vu69@gmail.com",
         password: hashedPassword,
         role: "admin",
       });
+      const landlord = await User.create({
+        name: "Minh Landlord",
+        email: "landlord@example.com",
+        password: landlordPassword,
+        role: "landlord",
+      });
       adminId = admin._id as mongoose.Types.ObjectId;
+      landlordId = landlord._id as mongoose.Types.ObjectId;
       console.log("✅ Users seeded.");
     } else {
       console.log("⏭️ Users collection is not empty. Skipping User seeding.");
       const admin = await User.findOne({ email: "Vu69@gmail.com" });
+      const landlord = await User.findOne({ email: "landlord@example.com" });
       adminId = admin ? (admin._id as mongoose.Types.ObjectId) : new mongoose.Types.ObjectId();
+      landlordId = landlord ? (landlord._id as mongoose.Types.ObjectId) : adminId;
     }
 
     // 2. Seed Rooms

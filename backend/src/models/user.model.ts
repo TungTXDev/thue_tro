@@ -4,7 +4,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string; // Optional for users that might be created without password
-  role: "user" | "admin";
+  role: "user" | "landlord" | "admin";
   phone?: string;
   status: "active" | "blocked";
   createdAt: Date;
@@ -16,7 +16,7 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String }, // Hashed password
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ["user", "landlord", "admin"], default: "user" },
     phone: { type: String },
     status: { type: String, enum: ["active", "blocked"], default: "active" },
   },
