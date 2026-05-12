@@ -2,7 +2,7 @@
 const initialRooms = [];
 const categories = ["Trọ", "Căn hộ", "Chung cư"];
 const locations = ["Cầu Giấy, HN", "Đống Đa, HN", "Thanh Xuân, HN", "Hai Bà Trưng, HN", "Quận 10, TP.HCM", "Bình Thạnh, TP.HCM"];
-const features = ["Mới Xây ✨", "Full Đồ Cực Đẹp", "Ban Công Thoáng", "Giờ Giấc Tự Do", "Khép Kín", "Sạch Sẽ Gần Chợ", "Có Thang Máy"];
+const features = ["Mới Xây", "Full Đồ Cực Đẹp", "Ban Công Thoáng", "Giờ Giấc Tự Do", "Khép Kín", "Sạch Sẽ Gần Chợ", "Có Thang Máy"];
 const images = [
     "images/room1.jpg",
     "images/room2.jpg",

@@ -62,7 +62,7 @@ async function confirmBooking() {
 
         try {
             await orderApi.createOrder(orderData);
-            alert(`✅ Đã đặt phòng thành công qua API!\nSố tiền: ${priceToSave.toLocaleString()} VNĐ`);
+            alert(`Đã đặt phòng thành công qua API!\nSố tiền: ${priceToSave.toLocaleString()} VNĐ`);
         } catch (error) {
             console.warn("API lỗi/chưa bật, fallback sang localStorage:", error.message);
             
@@ -78,7 +78,7 @@ async function confirmBooking() {
             storageOrders.push(newOrder);
             setStorage(STORAGE_KEYS.ALL_ORDERS, storageOrders);
 
-            alert(`✅ Đã đặt phòng thành công (Offline)!\nSố tiền: ${priceToSave.toLocaleString()} VNĐ`);
+            alert(`Đã đặt phòng thành công (Offline)!\nSố tiền: ${priceToSave.toLocaleString()} VNĐ`);
         }
         
         closeModal();
@@ -86,7 +86,7 @@ async function confirmBooking() {
 
     } catch (error) {
         console.error("Lỗi xác nhận đặt phòng:", error);
-        alert("❌ Có lỗi code rồi " + error.message);
+        alert("Có lỗi code rồi " + error.message);
     }
 }
 

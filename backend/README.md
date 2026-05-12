@@ -1,40 +1,44 @@
-# Backend API - Hệ thống Thuê Phòng Sinh Viên
+# Backend API - Student Room Rental System
 
-Đây là mã nguồn Backend cho hệ thống Thuê Phòng Sinh Viên, cung cấp các API RESTful phục vụ cho ứng dụng giao diện người dùng. Dự án được thiết kế chuẩn mực theo mô hình MVC, thân thiện với người mới học backend.
+This is the backend source code for the student room rental system. It provides RESTful APIs for the frontend application and follows a simple MVC-style structure that is approachable for backend beginners.
 
-## 🚀 Công Nghệ Sử Dụng
-- **Node.js & Express.js:** Framework xây dựng API.
-- **TypeScript:** Ngôn ngữ lập trình chính, giúp code an toàn và dễ bảo trì.
-- **MongoDB & Mongoose:** Cơ sở dữ liệu NoSQL linh hoạt.
-- **Bcrypt:** Mã hóa mật khẩu người dùng.
-- **JSON Web Token (JWT):** Quản lý phiên đăng nhập và phân quyền.
+## Tech Stack
+- **Node.js & Express.js:** API framework.
+- **TypeScript:** Main programming language for safer, more maintainable code.
+- **MongoDB & Mongoose:** Flexible NoSQL database and ODM.
+- **Bcrypt:** Password hashing.
+- **JSON Web Token (JWT):** Authentication and role-based access.
 
-## 📂 Cấu Trúc Thư Mục
+## Folder Structure
+
 ```text
 backend/
 ├── src/
-│   ├── config/        # Kết nối Database và biến môi trường
-│   ├── controllers/   # Xử lý logic từng endpoint (Auth, Room, User, Order...)
-│   ├── middlewares/   # Các hàm trung gian (requireAuth, requireAdmin...)
-│   ├── models/        # Định nghĩa cấu trúc dữ liệu (Mongoose Schema)
-│   ├── routes/        # Định tuyến các API endpoints
-│   ├── types/         # Khai báo các type mở rộng cho TypeScript
-│   ├── utils/         # Hàm hỗ trợ (Format response, Seed data...)
-│   ├── app.ts         # Khởi tạo và cấu hình Express app
-│   └── server.ts      # Điểm bắt đầu (Entry point), chạy server
-├── package.json       # Quản lý thư viện
-└── tsconfig.json      # Cấu hình TypeScript
+│   ├── config/        # Database connection and environment config
+│   ├── controllers/   # Endpoint logic for Auth, Room, User, Order, etc.
+│   ├── middlewares/   # Middleware such as requireAuth and requireAdmin
+│   ├── models/        # Mongoose schemas and models
+│   ├── routes/        # API route definitions
+│   ├── types/         # TypeScript type extensions
+│   ├── utils/         # Helpers such as responses and seed data
+│   ├── app.ts         # Express app setup
+│   └── server.ts      # Entry point that starts the server
+├── package.json       # Dependencies and scripts
+└── tsconfig.json      # TypeScript configuration
 ```
 
-## 🛠 Hướng Dẫn Cài Đặt & Chạy Server
+## Setup And Run
 
-### 1. Cài Đặt
+### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 2. Cấu Hình Biến Môi Trường
-Tạo file `.env` ở thư mục `backend/` dựa theo file `.env.example`:
+### 2. Configure Environment Variables
+
+Create a `.env` file in `backend/` based on `.env.example`:
+
 ```env
 PORT=4000
 MONGO_URI=mongodb://127.0.0.1:27017/thuephongsv
@@ -42,42 +46,52 @@ JWT_SECRET=super_secret_jwt_key
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://127.0.0.1:5500
 ```
-> **⚠️ CẢNH BÁO BẢO MẬT:** Tuyệt đối không commit file `.env` lên GitHub (đã được cấu hình trong `.gitignore`). Luôn dùng một chuỗi ngẫu nhiên phức tạp cho `JWT_SECRET`.
 
-### 3. Tạo Dữ Liệu Mẫu (Seeding)
-Lệnh này sẽ tự động thêm 1 tài khoản Admin và 40 phòng mẫu, kèm mã giảm giá:
+Security note: do not commit `.env` to GitHub. Use a strong random value for `JWT_SECRET`.
+
+### 3. Seed Demo Data
+
+This command creates one admin account, sample rooms, coupons, reviews, and orders:
+
 ```bash
 npm run seed
 ```
 
-### 4. Chạy Server ở Chế Độ Development
-Sử dụng thư viện `tsx` để tự động khởi động lại server mỗi khi code thay đổi:
+### 4. Run In Development
+
+The development script uses `tsx` and restarts automatically when source files change:
+
 ```bash
 npm run dev
 ```
 
-### 5. Build & Chạy ở Chế Độ Production
+### 5. Build And Run In Production
+
 ```bash
 npm run build
 npm start
 ```
 
-## 🔑 Tài Khoản Admin Demo
-Sau khi chạy seed, bạn có thể đăng nhập bằng tài khoản quản trị sau để lấy Token truy cập các API phân quyền:
+## Demo Admin Account
+
+After running the seed command, use this admin account to log in and get a token for protected API routes:
+
 - **Email:** `Vu69@gmail.com`
-- **Mật khẩu:** `admin123` *(Đã được băm an toàn trong Database)*
+- **Password:** `admin123`
 - **Role:** `admin`
 
-## 🧪 Hướng Dẫn Test API
-1. Xem chi tiết danh sách các API tại file [API_DOCS.md](./API_DOCS.md).
-2. Tải và sử dụng công cụ như **Postman** hoặc **Thunder Client** (VS Code Extension).
-3. **Đăng nhập** (`POST /api/auth/login`) bằng tài khoản trên để nhận chuỗi `token`.
-4. Khi test các tính năng của Admin, hãy thêm Header:
-   - **Key:** `Authorization`
-   - **Value:** `Bearer <chuỗi_token>`
+## API Testing
 
-## 🌱 Hướng Phát Triển Tiếp Theo
-1. **Kết nối Frontend:** Đổi logic dùng localStorage trên Frontend sang sử dụng `fetch/axios` gọi tới các API này.
-2. **Upload Ảnh:** Thay vì dùng URL ảnh có sẵn, có thể tích hợp Multer và Cloudinary để admin tự upload ảnh thực tế.
-3. **Thanh Toán Online:** Tích hợp Stripe, VNPay hoặc Momo vào quy trình thanh toán (Booking).
-4. **Chat Socket.io:** Nâng cấp hệ thống Chat AI hiện tại thành tính năng trò chuyện Real-time.
+1. See the endpoint list in [API_DOCS.md](./API_DOCS.md).
+2. Use a tool such as **Postman** or **Thunder Client**.
+3. Log in with `POST /api/auth/login` using the demo admin account above.
+4. For admin endpoints, include this header:
+   - **Key:** `Authorization`
+   - **Value:** `Bearer <token>`
+
+## Future Improvements
+
+1. **Frontend Integration:** Replace localStorage fallback logic with API calls for all flows.
+2. **Image Upload:** Add Multer and Cloudinary so admins can upload real room images.
+3. **Online Payments:** Integrate Stripe, VNPay, or Momo into the booking flow.
+4. **Realtime Chat:** Upgrade the simulated AI chat into a Socket.io-based realtime chat feature.

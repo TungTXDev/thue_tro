@@ -1,98 +1,102 @@
-# Hệ thống Thuê Phòng & Căn Hộ ✨ Cho Sinh Viên Mới
+# Student Room And Apartment Rental Frontend
 
-Một dự án frontend website mô phỏng nền tảng tìm kiếm và thuê phòng trọ, căn hộ dịch vụ dành cho sinh viên. Dự án hướng tới trải nghiệm người dùng hiện đại, rõ ràng, dễ sử dụng, đồng thời cung cấp tính năng quản lý cơ bản cho chủ nhà (admin).
+This is a frontend demo for a student room and serviced-apartment rental platform. The project focuses on a clear, modern user experience and includes basic admin features for landlords.
 
-## 🚀 Công Nghệ Sử Dụng
-- **HTML5** (Semantics layout)
-- **CSS3** (Flexbox, Grid, Custom Properties, không dùng thư viện ngoài)
-- **Bootstrap 5** (Grid, form, button, card, table responsive)
-- **JavaScript thuần** (Vanilla JS, thao tác DOM, Events)
-- **Cơ sở dữ liệu**: Trình duyệt `localStorage` (lưu trữ không cần backend)
+## Tech Stack
+- **HTML5** for semantic page structure
+- **CSS3** with Flexbox, Grid, and custom properties
+- **Bootstrap 5** for grid, forms, buttons, cards, and responsive tables
+- **Bootstrap Icons** for UI icons
+- **Vanilla JavaScript** for DOM interactions and events
+- **Browser localStorage** as the offline demo data store
 
-## 📂 Cấu Trúc Thư Mục
+## Folder Structure
 
-Dự án được chia thành các module rõ ràng nhằm dễ dàng bảo trì và mở rộng:
+The frontend is split into small modules for easier maintenance and extension:
 
 ```text
 frontend/
 │
-├── index.html       # Trang chủ: Danh sách phòng, tìm kiếm, đăng ký/đăng nhập
-├── detail.html      # Trang chi tiết phòng: Thông tin, đánh giá, đặt phòng
-├── admin.html       # Trang quản trị: Doanh thu, đơn hàng, mã giảm giá
+├── index.html       # Home page: room list, search, register/login
+├── detail.html      # Room detail page: room info, reviews, booking
+├── admin.html       # Admin page: revenue, orders, coupons
 │
-├── css/             # Thư mục chứa các file giao diện
-│   ├── base.css           # Cài đặt màu sắc, font chữ chung
-│   ├── layout.css         # Bố cục Header, Footer, Container chính
-│   ├── components.css     # Style các nút bấm, thẻ phòng, form nhập
-│   ├── index.css          # Style riêng cho Trang chủ
-│   ├── detail.css         # Style riêng cho Trang chi tiết
-│   └── admin.css          # Style riêng cho Trang quản trị
+├── css/             # UI styles
+│   ├── base.css           # Shared colors, typography, and resets
+│   ├── layout.css         # Header, footer, and main containers
+│   ├── components.css     # Buttons, cards, forms, modal, table styles
+│   ├── index.css          # Home page styles
+│   ├── detail.css         # Detail page styles
+│   └── admin.css          # Admin page styles
 │
-└── js/              # Thư mục chứa các module xử lý logic
-    ├── core/              # Các hàm lõi tiện ích chung
-    │   ├── storage.js     # Chuyên xử lý lưu/đọc dữ liệu localStorage
-    │   └── utils.js       # Các hàm tiện ích (format tiền, escapeHTML, lấy param...)
+└── js/              # Frontend logic modules
+    ├── core/              # Shared utilities
+    │   ├── storage.js     # localStorage helpers
+    │   └── utils.js       # Formatting, escaping, query params, dates
     │
-    ├── data/              # Quản lý dữ liệu mẫu
-    │   └── rooms.js       # Sinh dữ liệu phòng trọ ban đầu nếu chưa có
+    ├── data/              # Demo data
+    │   └── rooms.js       # Initial room data generation
     │
-    ├── features/          # Chứa các chức năng của ứng dụng
-    │   ├── auth.js        # Đăng ký, đăng nhập, phân quyền, cập nhật header
-    │   ├── chat.js        # Khung chat trợ lý AI mô phỏng
-    │   ├── rooms.js       # Logic hiển thị và lọc/tìm kiếm danh sách phòng
-    │   ├── booking.js     # Đặt phòng, modal thanh toán
-    │   ├── reviews.js     # Hiển thị và thêm đánh giá phòng
-    │   └── coupons.js     # Xử lý nhập/tạo mã giảm giá
+    ├── features/          # Application features
+    │   ├── auth.js        # Register, login, role checks, header state
+    │   ├── chat.js        # Simulated AI chat widget
+    │   ├── rooms.js       # Room rendering, search, and filtering
+    │   ├── booking.js     # Booking modal and payment flow
+    │   ├── reviews.js     # Room reviews
+    │   └── coupons.js     # Coupon apply/create logic
     │
-    └── pages/             # Logic khởi tạo riêng cho từng trang HTML
+    └── pages/             # Page initializers
         ├── index.js
         ├── detail.js
         └── admin.js
 ```
 
-## 🛠 Cách Chạy Project
+## Run The Project
 
-1. **Khuyến nghị**: Sử dụng Extension **Live Server** trong VS Code.
-2. Mở thư mục `frontend/` trong VS Code.
-3. Chuột phải vào file `index.html` và chọn **Open with Live Server**.
-4. Website sẽ tự động mở trên trình duyệt tại `http://127.0.0.1:5500`.
+1. Recommended: use the **Live Server** extension in VS Code.
+2. Open the `frontend/` directory in VS Code.
+3. Right-click `index.html` and choose **Open with Live Server**.
+4. The website will open at `http://127.0.0.1:5500`.
 
-## 🔑 Tài Khoản Admin Demo & Hướng Dẫn Test
+## Demo Admin Account And Testing
 
-### 1. Dành cho Frontend Demo (Trang Web)
-Hệ thống có một trang `admin.html` dành riêng cho quản lý. Tuy nhiên, không phải ai cũng có thể truy cập được. 
-- **Cách vào Admin**: Bạn cần đăng ký hoặc đăng nhập một tài khoản có Tên chứa chữ **"Vũ"** hoặc Email là **"Vu69@gmail.com"**. Sau khi đăng nhập, trên thanh menu sẽ xuất hiện nút **"Quản lý"** để vào trang Admin.
-- **Cách tạo Coupon**: Vào trang Admin -> Tìm mục "Tạo Mã Giảm Giá Mới" -> Nhập mã (VD: VIP99) và số tiền giảm -> Nhấn Thêm.
-- **Cách đặt phòng**: Đăng nhập (tài khoản bất kỳ) -> Xem chi tiết một phòng ở Trang chủ -> Nhấn "🚀 ĐẶT PHÒNG NGAY" -> Chọn phương thức thanh toán và nhập mã Coupon (nếu có) -> Xác nhận. Sau đó, vào Admin (bằng tài khoản Vũ) để xem đơn hàng vừa đặt.
+### Frontend Demo
+The app includes an `admin.html` page for management. Access is restricted by demo-only client-side checks.
 
-### 2. Dành cho Backend API (Postman / Thunder Client)
-Khi kiểm thử các API yêu cầu quyền Admin (như `GET /api/users`), hãy sử dụng tài khoản demo sau để đăng nhập lấy Token:
+- **Open Admin**: register or log in with a name containing **"Vũ"** or with the email **"Vu69@gmail.com"**. After login, the **Quản lý** link appears in the header.
+- **Create Coupon**: go to Admin, find "Tạo Mã Giảm Giá Mới", enter a code such as `VIP99` and a discount amount, then click Add.
+- **Book A Room**: log in, open a room detail page, click "Đặt phòng ngay", select a payment method, optionally apply a coupon, then confirm. Use the admin account to view the created order.
+
+### Backend API
+For API endpoints that require admin access, such as `GET /api/users`, log in with this seeded demo account:
+
 - **Email**: `Vu69@gmail.com`
 - **Password**: `admin123`
 - **Role**: `admin`
-*(Lưu ý: Tài khoản này được tạo tự động khi chạy lệnh `npm run seed` và chỉ dùng cho mục đích demo)*
 
-## ⭐ Các Chức Năng Chính
-- **Xem danh sách phòng**: Dữ liệu phòng ngẫu nhiên được sinh ra ở lần đầu chạy.
-- **Tìm kiếm/Lọc phòng**: Lọc theo khu vực, giá, hoặc loại phòng.
-- **Đăng ký/Đăng nhập**: Xử lý logic phía client (không cần load lại trang).
-- **Chat AI mô phỏng**: Khung chat hỗ trợ tự động trả lời.
-- **Xem chi tiết phòng**: Hiển thị hình ảnh, giá thuê, tiện ích.
-- **Đặt phòng**: Chọn phương thức thanh toán Tiền mặt hoặc Quét QR Code giữ chỗ.
-- **Coupon**: Áp dụng mã giảm giá khi đặt phòng.
-- **Review**: Cho phép người dùng viết đánh giá (lưu cho từng phòng).
-- **Admin Dashboard**: Thống kê doanh thu, xem danh sách đơn đặt phòng, tạo mã giảm giá mới và làm sạch lịch sử.
+This account is created by `npm run seed` in the backend and is intended only for demo/testing.
 
-## ⚠️ Lưu Ý Quan Trọng
-- Dự án này là **Frontend Demo**, phục vụ mục đích học tập và trình diễn khả năng tổ chức mã (HTML/CSS/JS).
-- Mọi dữ liệu (tài khoản, đánh giá, danh sách phòng, hóa đơn) đều được lưu tại **localStorage** của trình duyệt. 
-- **Cách Reset Dữ Liệu**: Nhấn `F12` (Mở DevTools) -> Chọn tab `Application` -> Chọn `Local Storage` -> Chuột phải vào tên miền và chọn `Clear`. Tải lại trang (`F5`) để khôi phục dữ liệu phòng mẫu ban đầu.
-- Chưa có backend (server) hay database thực sự.
-- Bảo mật trang admin hiện chỉ là demo trên client-side (chuyển hướng người dùng nếu không đủ quyền).
+## Main Features
+- View generated room listings.
+- Search and filter rooms by location, price, or type.
+- Register and log in from the client UI.
+- Use a simulated AI chat widget.
+- View room detail pages with images, price, and amenities.
+- Book a room with cash or QR payment flow.
+- Apply discount coupons during booking.
+- Add and view room reviews.
+- Use an admin dashboard for revenue, orders, coupons, and order cleanup.
 
-## 🌱 Hướng Phát Triển Tương Lai
-- 🔗 **Thêm Backend**: Chuyển đổi logic sang Node.js (Express) hoặc Python.
-- 🗄️ **Thêm Database**: Sử dụng MongoDB hoặc MySQL thay cho localStorage.
-- 🔐 **Bảo mật**: Triển khai JWT (JSON Web Tokens) cho đăng nhập và phân quyền thật.
-- 👨‍💼 **Chức năng chủ nhà**: Cho phép nhiều chủ trọ khác nhau đăng tin và quản lý phòng của riêng họ.
-- 💳 **Thanh toán thật**: Tích hợp các cổng thanh toán như VNPay, Momo.
+## Important Notes
+- This frontend is a learning/demo project.
+- Offline demo data is stored in browser `localStorage`.
+- To reset data, open DevTools, go to **Application** -> **Local Storage**, clear the current origin, then reload the page.
+- The frontend can call the backend API when the server is running; otherwise, it falls back to localStorage.
+- Admin protection in the frontend is demo-only and should not be used as real security.
+
+## Future Improvements
+- Connect all frontend flows fully to the backend API.
+- Replace localStorage with MongoDB-backed data.
+- Improve authentication and authorization with JWT-based server checks.
+- Add landlord-specific room management.
+- Integrate real payment providers such as VNPay or Momo.

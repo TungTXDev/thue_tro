@@ -24,7 +24,7 @@ async function renderRooms(dataToRender = null) {
 
     // Nếu danh sách trống 
     if (!rooms || rooms.length === 0) {
-        roomGrid.innerHTML = '<p class="empty-message">Mất dấu rồi! Không tìm thấy phòng nào phù hợp với yêu cầu của bạn 🥲</p>';
+        roomGrid.innerHTML = '<p class="empty-message"><i class="bi bi-search"></i> Không tìm thấy phòng nào phù hợp với yêu cầu của bạn.</p>';
         return;
     }
 
@@ -39,7 +39,7 @@ async function renderRooms(dataToRender = null) {
                 <div class="card-body">
                     <span class="card-category badge text-bg-warning">${escapeHTML(room.category)}</span>
                     <h3 class="card-title">${escapeHTML(room.title)}</h3>
-                    <p class="card-location">📍 ${escapeHTML(room.district)}</p>
+                    <p class="card-location"><i class="bi bi-geo-alt"></i> ${escapeHTML(room.district)}</p>
                     <div class="card-price">${priceFormatted}<span class="price-format"> / tháng</span></div>
                     <a href="detail.html?id=${room.id}" class="btn-detail btn btn-outline-primary btn-sm">Xem chi tiết</a>
                 </div>

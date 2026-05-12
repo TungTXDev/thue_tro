@@ -16,7 +16,7 @@ async function applyCoupon() {
         
         modalPriceDisplay.innerHTML = `<span class="old-price">${formatVND(roomPrice)}</span> <br> ${formatVND(data.finalPrice)}`;
         
-        msg.innerText = `✅ Đã áp dụng mã ${input}: Giảm ${formatVND(data.discount)}`;
+        msg.innerHTML = `<i class="bi bi-check-circle"></i> Đã áp dụng mã ${escapeHTML(input)}: Giảm ${formatVND(data.discount)}`;
         msg.className = "coupon-msg-success";
     } catch (error) {
         console.warn("API lỗi/chưa bật, fallback sang localStorage:", error.message);
@@ -30,10 +30,10 @@ async function applyCoupon() {
             if (window.DetailPageState.finalPrice < 0) window.DetailPageState.finalPrice = 0; 
 
             modalPriceDisplay.innerHTML = `<span class="old-price">${formatVND(roomPrice)}</span> <br> ${formatVND(window.DetailPageState.finalPrice)}`;
-            msg.innerText = `✅ Đã áp dụng mã ${found.code}: Giảm ${formatVND(found.value)}`;
+            msg.innerHTML = `<i class="bi bi-check-circle"></i> Đã áp dụng mã ${escapeHTML(found.code)}: Giảm ${formatVND(found.value)}`;
             msg.className = "coupon-msg-success";
         } else {
-            msg.innerText = "❌ Mã giảm giá không tồn tại hoặc đã hết hạn!";
+            msg.innerHTML = '<i class="bi bi-x-circle"></i> Mã giảm giá không tồn tại hoặc đã hết hạn!';
             msg.className = "coupon-msg-error";
             
             window.DetailPageState.finalPrice = roomPrice;

@@ -45,11 +45,11 @@ function setupAuthForm() {
                 const response = await authApi.register(userData);
                 localStorage.setItem('authToken', response.data.token);
                 setStorage(STORAGE_KEYS.CURRENT_USER, response.data.user);
-                alert("🎉 Đăng ký thành công qua API! Hệ thống đã tự động đăng nhập cho bạn.");
+                alert("Đăng ký thành công qua API! Hệ thống đã tự động đăng nhập cho bạn.");
             } catch (error) {
                 console.warn("API lỗi/chưa bật, fallback sang localStorage:", error.message);
                 setStorage(STORAGE_KEYS.CURRENT_USER, localData);
-                alert("🎉 Đăng ký thành công (Offline)! Hệ thống đã tự động đăng nhập cho bạn.");
+                alert("Đăng ký thành công (Offline)! Hệ thống đã tự động đăng nhập cho bạn.");
             }
         } else {
             // ---> ĐANG Ở CHẾ ĐỘ ĐĂNG NHẬP
@@ -59,15 +59,15 @@ function setupAuthForm() {
                 const response = await authApi.login(credentials);
                 localStorage.setItem('authToken', response.data.token);
                 setStorage(STORAGE_KEYS.CURRENT_USER, response.data.user);
-                alert("🔓 Đăng nhập thành công qua API! Chào mừng trở lại.");
+                alert("Đăng nhập thành công qua API! Chào mừng trở lại.");
             } catch (error) {
                 console.warn("API lỗi/chưa bật, fallback sang localStorage:", error.message);
                 const savedUser = getStorage(STORAGE_KEYS.CURRENT_USER);
                 
                 if (savedUser && savedUser.email === email && savedUser.pass === pass) {
-                    alert("🔓 Đăng nhập thành công (Offline)! Chào mừng trở lại.");
+                    alert("Đăng nhập thành công (Offline)! Chào mừng trở lại.");
                 } else {
-                    alert("❌ Sai email hoặc mật khẩu! Vui lòng thử lại.");
+                    alert("Sai email hoặc mật khẩu! Vui lòng thử lại.");
                     return; // Sai thì dừng lại không cho đăng nhập
                 }
             }
@@ -98,8 +98,8 @@ function updateHeader() {
         <li class="dropdown nav-item">
             <a href="javascript:void(0)" class="dropbtn nav-link">Hỗ trợ ▾</a>
             <div class="dropdown-content">
-                <a href="javascript:void(0)" onclick="toggleAIChat()">🤖 Chat với AI</a>
-                <a href="tel:0987654321">📞 Gọi: 0987.654.321</a>
+                <a href="javascript:void(0)" onclick="toggleAIChat()"><i class="bi bi-chat-dots"></i> Chat với AI</a>
+                <a href="tel:0987654321"><i class="bi bi-telephone"></i> Gọi: 0987.654.321</a>
             </div>
         </li>
     `;
@@ -107,13 +107,13 @@ function updateHeader() {
     if (savedUser) {
         // 2. KIỂM TRA QUYỀN ADMIN: 
         if (savedUser.name.includes("Vũ") || savedUser.email === "Vu69@gmail.com") {
-            navLinks.innerHTML += `<li class="nav-item"><a href="admin.html" class="admin-link nav-link">📊 Quản lý</a></li>`;
+            navLinks.innerHTML += `<li class="nav-item"><a href="admin.html" class="admin-link nav-link"><i class="bi bi-speedometer2"></i> Quản lý</a></li>`;
         }
 
         // 3. Hiển thị lời chào và nút Đăng xuất
         userIconsDiv.innerHTML = `
-            <span class="welcome-text">👋 Chào, ${escapeHTML(savedUser.name)}!</span>
-            <a href="javascript:void(0)" onclick="logout()" class="btn btn-danger btn-sm">Đăng xuất</a>
+            <span class="welcome-text"><i class="bi bi-person-circle"></i> Chào, ${escapeHTML(savedUser.name)}!</span>
+            <a href="javascript:void(0)" onclick="logout()" class="btn btn-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
         `;
         
         // Ẩn khung đăng ký ở cuối trang
@@ -121,7 +121,7 @@ function updateHeader() {
     } else {
         // 4. Nếu chưa đăng nhập -> Hiện nút Đăng ký ban đầu
         userIconsDiv.innerHTML = `
-            <a href="#auth-section" class="btn btn-primary btn-header">Đăng ký / Đăng nhập</a>
+            <a href="#auth-section" class="btn btn-primary btn-header"><i class="bi bi-person-circle"></i> Đăng ký / Đăng nhập</a>
         `;
         if(authSection) authSection.style.display = 'block';
     }

@@ -23,11 +23,11 @@ async function renderReviews() {
     }
 
     currentRoomReviews.forEach(rev => {
-        const stars = '⭐'.repeat(rev.stars);
+        const stars = Array.from({ length: rev.stars }, () => '<i class="bi bi-star-fill"></i>').join('');
         const reviewHTML = `
             <div class="review-item">
                 <div class="review-header">
-                    <strong>👤 Khách hàng ẩn danh</strong>
+                    <strong><i class="bi bi-person"></i> Khách hàng ẩn danh</strong>
                     <span class="review-stars">${stars}</span>
                 </div>
                 <p class="review-text">${escapeHTML(rev.content)}</p>

@@ -1,18 +1,18 @@
 # Thue Tro
 
-Du an da duoc tach thanh hai phan rieng:
+The project is split into two separate parts:
 
 ```text
 thue_tro/
-├── frontend/   # Giao dien HTML/CSS/JavaScript
-└── backend/    # API Node.js/Express/TypeScript
+├── frontend/   # HTML/CSS/JavaScript user interface
+└── backend/    # Node.js/Express/TypeScript API
 ```
 
-## Chay frontend
+## Run The Frontend
 
-Mo thu muc `frontend/`, sau do chay file `index.html` bang Live Server hoac mo truc tiep tren trinh duyet.
+Open the `frontend/` directory, then run `index.html` with Live Server or open it directly in a browser.
 
-## Chay backend
+## Run The Backend
 
 ```bash
 cd backend
@@ -20,4 +20,4 @@ npm install
 npm run dev
 ```
 
-Xem huong dan chi tiet trong `frontend/README.md` va `backend/README.md`.
+See the detailed instructions in `frontend/README.md` and `backend/README.md`.

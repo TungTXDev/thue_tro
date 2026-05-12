@@ -2,7 +2,7 @@
 const checkUser = getStorage(STORAGE_KEYS.CURRENT_USER);
 
 if (!checkUser || (!checkUser.name.includes("Vũ") && checkUser.email !== "Vu69@gmail.com")) {
-    alert("⛔ CẢNH BÁO: Bạn không có quyền truy cập khu vực này!");
+    alert("CẢNH BÁO: Bạn không có quyền truy cập khu vực này!");
     window.location.href = "index.html"; // Đá văng ra trang chủ ngay lập tức
 }
 

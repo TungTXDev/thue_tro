@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('room-img').src = room.image;
         document.getElementById('room-title').innerText = room.title;
         document.getElementById('room-category').innerText = room.category;
-        document.getElementById('room-address').innerText = "📍 " + room.district;
+        document.getElementById('room-address').innerHTML = `<i class="bi bi-geo-alt"></i> ${escapeHTML(room.district)}`;
         
         const p = formatVND(room.price);
         document.getElementById('room-price').innerHTML = p + " <span>/tháng</span>";

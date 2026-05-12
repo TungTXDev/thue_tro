@@ -12,8 +12,8 @@
 
 .section-title { font-size: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin: 30px 0 15px; color: #1877f2; }
 .amenities-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.amenities-list li { padding: 8px 0; color: #555; display: flex; align-items: center; gap: 10px; }
-.amenities-list li::before { content: '✔️'; color: #28a745; }
+.amenities-list li { padding: 8px 0; color: #555; display: flex; align-items: center; gap: 8px; }
+.amenities-list li .bi { color: #28a745; }
 
 /* Cột phải: Giá & Thanh toán mới */
 .sidebar { display: flex; flex-direction: column; gap: 20px; }
@@ -22,7 +22,7 @@
 .price span { font-size: 16px; color: #666; font-weight: normal; }
 
 /* Pay opts in Modal */
-.pay-opt { flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.pay-opt { flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; font-weight: bold; text-align: center; }
 .pay-opt.active { border-color: #1877f2; background: #f0f7ff; color: #1877f2; }
 .qr-img { width: 220px; height: 220px; margin-top: 15px; border: 1px solid #eee; }
 
@@ -71,3 +71,27 @@
 .coupon-msg-success { color: #28a745; display: block; }
 .coupon-msg-error { color: #dc3545; display: block; }
 
+@media (max-width: 900px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .main-img {
+        height: 320px;
+    }
+}
+
+@media (max-width: 576px) {
+    .amenities-list,
+    .pay-options {
+        grid-template-columns: 1fr;
+    }
+
+    .amenities-list {
+        display: block;
+    }
+
+    .pay-options {
+        flex-direction: column;
+    }
+}
