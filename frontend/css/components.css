@@ -39,23 +39,12 @@
 .card-price .price-format { color: #555; font-size: 14px; font-weight: 400; }
 
 /* BUTTONS */
-.btn { display: inline-block; padding: 12px 25px; background-color: var(--accent-color, #ff9f43); color: var(--main-text-color, #2d3436); font-weight: bold; border-radius: 5px; cursor: pointer; border: none; font-size: 16px; }
-.btn:hover { background-color: #e08c3a; color: white; }
 .btn-header { color: white; padding: 8px 18px; background: #1877f2; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-block; }
 .btn-header:hover { background: #166fe5; }
 .btn-danger { background-color: #dc3545; color: white; padding: 6px 15px; border-radius: 6px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; display: inline-block; text-decoration: none; }
 .btn-danger:hover { background-color: #c82333; }
 .btn-detail { display: inline-block; padding: 8px 20px; background: transparent; color: #1877f2; border: 1px solid #1877f2; border-radius: 4px; font-size: 14px; font-weight: 500; }
 .btn-detail:hover { background: #1877f2; color: white; }
-.btn-primary { 
-    width: 100%; padding: 15px; 
-    background-color: #1877f2; color: white; 
-    border: none; border-radius: 9px; 
-    font-size: 16px; font-weight: bold; 
-    cursor: pointer; transition: 0.2s; 
-    margin-top: 10px; 
-}
-.btn-primary:hover { background-color: #166fe5; }
 
 .btn-book { 
     width: 100%; padding: 18px; background: #28a745; color: white; border: none; 

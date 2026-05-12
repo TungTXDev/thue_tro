@@ -95,8 +95,8 @@ function updateHeader() {
     navLinks.innerHTML = `
         <li class="nav-item"><a href="index.html" class="nav-link">Trang chủ</a></li>
         <li class="nav-item"><a href="#room-grid" class="nav-link">Tìm phòng</a></li>
-        <li class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Hỗ trợ ▾</a>
+        <li class="dropdown nav-item">
+            <a href="javascript:void(0)" class="dropbtn nav-link">Hỗ trợ ▾</a>
             <div class="dropdown-content">
                 <a href="javascript:void(0)" onclick="toggleAIChat()">🤖 Chat với AI</a>
                 <a href="tel:0987654321">📞 Gọi: 0987.654.321</a>
