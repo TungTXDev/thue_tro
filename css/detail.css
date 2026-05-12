@@ -1,0 +1,73 @@
+.container { max-width: 1200px; margin: 30px auto; } /* Overrides layout.css */
+
+/* Bố cục lưới 2 cột */
+.detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+
+/* Cột trái: Hình ảnh & Nội thất cũ */
+.main-info { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+.main-img { width: 100%; height: 450px; object-fit: cover; }
+.info-content { padding: 30px; }
+
+.title { font-size: 28px; color: #2d3436; margin-bottom: 15px; }
+
+.section-title { font-size: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin: 30px 0 15px; color: #1877f2; }
+.amenities-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.amenities-list li { padding: 8px 0; color: #555; display: flex; align-items: center; gap: 10px; }
+.amenities-list li::before { content: '✔️'; color: #28a745; }
+
+/* Cột phải: Giá & Thanh toán mới */
+.sidebar { display: flex; flex-direction: column; gap: 20px; }
+.price-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); text-align: center; border: 2px solid #ff9f43; }
+.price { font-size: 32px; color: #e41e3f; font-weight: bold; }
+.price span { font-size: 16px; color: #666; font-weight: normal; }
+
+/* Pay opts in Modal */
+.pay-opt { flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.pay-opt.active { border-color: #1877f2; background: #f0f7ff; color: #1877f2; }
+.qr-img { width: 220px; height: 220px; margin-top: 15px; border: 1px solid #eee; }
+
+/* ======================== REVIEWS SECTION ======================== */
+.reviews-section { margin-top: 40px; border-top: 2px solid #eee; padding-top: 30px; }
+.review-title { font-size: 22px; color: #1877f2; margin-bottom: 20px; }
+.review-form { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 30px; }
+.review-form-title { margin-bottom: 10px; }
+.review-stars-group { margin-bottom: 15px; }
+.review-select { padding: 5px; border-radius: 5px; border: 1px solid #ccc; }
+.review-textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; margin-bottom: 10px; }
+.review-btn { background: #1877f2; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.reviews-list { display: flex; flex-direction: column; gap: 15px; }
+.empty-review { color: #888; font-style: italic; }
+.review-item { background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #1877f2; }
+.review-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.review-stars { color: #f1c40f; }
+.review-text { color: #555; font-size: 14px; line-height: 1.5; }
+.review-date { color: #999; font-size: 11px; }
+
+/* ======================== CONTACT BOX ======================== */
+.contact-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+.contact-title { margin-bottom: 15px; }
+.contact-note { font-size: 14px; color: #888; margin-top: 10px; }
+
+/* ======================== MODAL STYLES ======================== */
+.modal-title { color: #1877f2; }
+.modal-price-wrapper { margin: 15px 0; }
+.modal-price-val { color: #e41e3f; }
+.old-price { text-decoration: line-through; color: #999; font-size: 14px; }
+.pay-options { display: flex; gap: 10px; margin-bottom: 20px; }
+.coupon-panel { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px dashed #1877f2; }
+.coupon-label { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #555; }
+.coupon-input-group { display: flex; gap: 5px; }
+.coupon-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; outline: none; text-transform: uppercase; }
+.btn-apply { background: #1877f2; color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+.coupon-msg { font-size: 12px; margin-top: 5px; display: none; }
+.btn-confirm { width: 100%; padding: 15px; background: #1877f2; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+.btn-close { margin-top: 15px; background: none; border: none; color: #999; cursor: pointer; }
+.qr-instruction { font-size: 13px; color: #666; }
+.qr-image { width: 200px; height: 200px; margin-top: 10px; }
+
+/* ======================== HEADER CONTAINER ======================== */
+.header-container { max-width: 1200px; margin: 0 auto; }
+
+.coupon-msg-success { color: #28a745; display: block; }
+.coupon-msg-error { color: #dc3545; display: block; }
+

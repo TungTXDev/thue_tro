@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ thống Quản trị Cao cấp - ThuêPhong SV</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 Hệ Thống Quản Lý Chủ Nhà</h1>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>💰 Tổng Doanh Thu Thực Tế</h3>
+            <div id="total-revenue" class="stat-val">0đ</div>
+        </div>
+        <div class="card">
+            <h3>🎟️ Tạo Mã Giảm Giá Mới</h3>
+            <div class="coupon-box">
+                <input type="text" id="cp-code" placeholder="Mã (VD: DIS500)">
+                <input type="number" id="cp-val" placeholder="Số tiền giảm">
+                <button class="btn" onclick="addCoupon()">Thêm</button>
+            </div>
+            <div id="coupon-list" class="coupon-list"></div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h3>📄 Danh Sách Khách Đặt Phòng</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ngày đặt</th>
+                    <th>Khách hàng</th>
+                    <th>Tên phòng (Sản phẩm)</th>
+                    <th>Giá thanh toán</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody id="order-table-body">
+                </tbody>
+        </table>
+    </div>
+    
+    <button onclick="clearOrders()" class="btn-clear">🗑️ Xóa lịch sử đơn hàng</button>
+</div>
+
+<script src="js/core/storage.js"></script>
+<script src="js/core/utils.js"></script>
+<script src="js/core/apiClient.js"></script>
+<script src="js/services/couponApi.js"></script>
+<script src="js/services/orderApi.js"></script>
+<script src="js/services/adminApi.js"></script>
+<script src="js/features/coupons.js"></script>
+<script src="js/pages/admin.js"></script>
+</body>
+</html>

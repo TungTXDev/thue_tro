@@ -1,0 +1,26 @@
+/* ======================== 1. PHONG CÁCH CHUNG ======================== */
+:root {
+    --accent-color: #ff9f43; 
+    --main-text-color: #2d3436;
+    --secondary-text-color: #636e72;
+    --background-card-color: #ffffff;
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+body { 
+    background-color: #f8f9fa; 
+    color: #333; 
+    line-height: 1.6; 
+}
+
+a { 
+    text-decoration: none; 
+    color: inherit; 
+    transition: 0.2s; 
+}

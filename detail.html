@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết & Đặt Phòng Cao Cấp</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/detail.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">Thuê<span>Phong</span> SV 🏠</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-btn">← Quay lại danh sách</a>
+        
+        <div class="detail-grid" id="detail-content">
+            <div class="main-info">
+                <img id="room-img" src="" class="main-img">
+                <div class="info-content">
+                    <span id="room-category" class="category-tag"></span>
+                    <h1 id="room-title" class="title"></h1>
+                    <p id="room-address" class="text-muted">📍 Đang tải địa chỉ...</p>
+                    
+                    <h3 class="section-title">Nội thất & Tiện ích</h3>
+                    <ul class="amenities-list">
+                        <li>Điều hòa Daikin</li>
+                        <li>Bình nóng lạnh</li>
+                        <li>Máy giặt riêng</li>
+                        <li>Giường nệm cao cấp</li>
+                        <li>Tủ quần áo gỗ</li>
+                        <li>Khu bếp nấu ăn</li>
+                    </ul>
+
+                    <h3 class="section-title">Mô tả căn hộ</h3>
+                    <p class="text-secondary">Phòng trọ được thiết kế hiện đại, tối ưu diện tích. Không gian thoáng đãng với cửa sổ lớn, ban công phơi đồ riêng biệt. Khu vực dân trí cao, camera an ninh 24/7, giờ giấc hoàn toàn tự do.</p>
+                    <section class="reviews-section">
+    <h3 class="review-title">🌟 Đánh giá từ người thuê</h3>
+
+    <div class="review-form">
+        <h4 class="review-form-title">Viết đánh giá của bạn</h4>
+        <div class="review-stars-group">
+            <label>Chọn số sao:</label>
+            <select id="review-stars" class="review-select">
+                <option value="5">⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                <option value="3">⭐⭐⭐ (Trung bình)</option>
+                <option value="2">⭐⭐ (Kém)</option>
+                <option value="1">⭐ (Rất tệ)</option>
+            </select>
+        </div>
+        <textarea id="review-content" rows="3" placeholder="Phòng có sạch sẽ không? Chủ nhà có nhiệt tình không?..." class="review-textarea"></textarea>
+        <button onclick="addReview()" class="review-btn">Gửi đánh giá</button>
+    </div>
+
+    <div id="reviews-list" class="reviews-list">
+        </div>
+</section>
+
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="price-box">
+                    <p class="text-muted">Giá thuê hàng tháng</p>
+                    <div id="room-price" class="price"></div>
+                </div>
+
+                <div class="contact-box">
+                    <h3 class="contact-title">Liên hệ chủ nhà</h3>
+                    <p><strong>👤 Anh Minh:</strong> 0987.654.321</p>
+                    <p class="contact-note">Vui lòng đặt phòng trước để giữ chỗ trong 24h.</p>
+                    
+                    <button class="btn-book" onclick="openModal()">🚀 ĐẶT PHÒNG NGAY</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="payModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Thanh Toán Giữ Chỗ</h2>
+            <p class="modal-price-wrapper">Số tiền: <strong id="modal-price" class="modal-price-val"></strong></p>
+            
+            <div class="pay-options">
+                <div id="btn-cash" class="pay-opt active" onclick="switchPay('cash')">💵 Tiền mặt</div>
+                <div id="btn-qr" class="pay-opt" onclick="switchPay('qr')">📲 Quét mã QR</div>
+            </div>
+
+            <div id="pay-detail">
+                <p class="text-muted">Bạn sẽ thanh toán tiền khi đến xem phòng trực tiếp.</p>
+            </div>
+<div class="coupon-panel">
+    <p class="coupon-label">Mã giảm giá (Coupon):</p>
+    <div class="coupon-input-group">
+        <input type="text" id="coupon-input" placeholder="Nhập mã tại đây..." class="coupon-input">
+        <button onclick="applyCoupon()" class="btn-apply">Áp dụng</button>
+    </div>
+    <p id="coupon-msg" class="coupon-msg"></p>
+</div>
+            <button onclick="confirmBooking()" class="btn-confirm">XÁC NHẬN ĐẶT PHÒNG</button>
+            <button onclick="closeModal()" class="btn-close">Đóng lại</button>
+        </div>
+    </div>
+
+    <script src="js/core/storage.js"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/apiClient.js"></script>
+    <script src="js/services/roomApi.js"></script>
+    <script src="js/services/reviewApi.js"></script>
+    <script src="js/services/couponApi.js"></script>
+    <script src="js/services/orderApi.js"></script>
+    <script src="js/features/booking.js"></script>
+    <script src="js/features/reviews.js"></script>
+    <script src="js/features/coupons.js"></script>
+    <script src="js/pages/detail.js"></script>
+</body>
+</html>
