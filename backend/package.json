@@ -2,12 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "seed": "tsx src/utils/seed.ts"
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/utils/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -21,13 +20,5 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.2"
   },
-  "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.6.2",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.3"
-  }
+  "devDependencies": {}
 }
