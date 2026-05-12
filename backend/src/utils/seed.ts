@@ -14,35 +14,39 @@ const seedData = async () => {
     await connectDatabase();
 
     // 1. Seed Users
-    const userCount = await User.countDocuments();
     let adminId: mongoose.Types.ObjectId;
     let landlordId: mongoose.Types.ObjectId;
-    if (userCount === 0) {
-      console.log("🌱 Seeding Users...");
-      const hashedPassword = await bcrypt.hash("admin123", 10);
-      const landlordPassword = await bcrypt.hash("landlord123", 10);
-      const admin = await User.create({
+    console.log("🌱 Ensuring demo users...");
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const landlordPassword = await bcrypt.hash("landlord123", 10);
+
+    const admin = await User.findOneAndUpdate(
+      { email: "Vu69@gmail.com" },
+      {
         name: "Vũ Admin",
         email: "Vu69@gmail.com",
         password: hashedPassword,
         role: "admin",
-      });
-      const landlord = await User.create({
+        status: "active",
+      },
+      { upsert: true, new: true }
+    );
+
+    const landlord = await User.findOneAndUpdate(
+      { email: "landlord@example.com" },
+      {
         name: "Minh Landlord",
         email: "landlord@example.com",
         password: landlordPassword,
         role: "landlord",
-      });
-      adminId = admin._id as mongoose.Types.ObjectId;
-      landlordId = landlord._id as mongoose.Types.ObjectId;
-      console.log("✅ Users seeded.");
-    } else {
-      console.log("⏭️ Users collection is not empty. Skipping User seeding.");
-      const admin = await User.findOne({ email: "Vu69@gmail.com" });
-      const landlord = await User.findOne({ email: "landlord@example.com" });
-      adminId = admin ? (admin._id as mongoose.Types.ObjectId) : new mongoose.Types.ObjectId();
-      landlordId = landlord ? (landlord._id as mongoose.Types.ObjectId) : adminId;
-    }
+        status: "active",
+      },
+      { upsert: true, new: true }
+    );
+
+    adminId = admin._id as mongoose.Types.ObjectId;
+    landlordId = landlord._id as mongoose.Types.ObjectId;
+    console.log("✅ Demo users ready.");
 
     // 2. Seed Rooms
     const roomCount = await Room.countDocuments();

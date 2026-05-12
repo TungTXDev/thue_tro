@@ -173,6 +173,10 @@ function logout() {
     if(confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
         removeStorage(STORAGE_KEYS.CURRENT_USER); 
         localStorage.removeItem('authToken');
+        if (window.location.pathname.endsWith('/admin.html') || window.location.pathname.endsWith('/landlord.html')) {
+            window.location.href = "index.html";
+            return;
+        }
         updateHeader(); // Vẽ lại Header
     }
 }

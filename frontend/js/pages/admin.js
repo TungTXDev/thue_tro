@@ -7,6 +7,7 @@ if (!checkUser || checkRole !== "admin") {
 }
 
 async function loadAdminData() {
+    if (!checkUser || checkRole !== "admin") return;
     let orders = [];
     let coupons = [];
     let totalRev = 0;

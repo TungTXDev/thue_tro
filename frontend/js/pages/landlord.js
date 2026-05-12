@@ -7,6 +7,7 @@ if (!landlordUser || landlordRole !== "landlord") {
 }
 
 async function loadLandlordData() {
+    if (!landlordUser || landlordRole !== "landlord") return;
     let rooms = [];
     let orders = [];
 
