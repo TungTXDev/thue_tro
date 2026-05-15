@@ -6,12 +6,14 @@ const {
   updateRoom,
   deleteRoom,
   seedRooms,
+  getSearchSuggestions,
 } = require("../controllers/room.controller");
 const { requireAuth, requireAdmin, requireLandlord } = require("../middlewares/auth.middleware");
 
 const router = Router();
 
 router.get("/", getRooms);
+router.get("/suggestions", getSearchSuggestions);
 router.get("/:id", getRoomById);
 router.post("/seed", requireAuth, requireAdmin, seedRooms);
 router.post("/", requireAuth, requireLandlord, createRoom);

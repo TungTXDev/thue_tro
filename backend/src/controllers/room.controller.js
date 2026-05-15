@@ -154,4 +154,68 @@ const seedRooms = async (req, res) => {
   }
 };
 
-module.exports = { getRooms, getRoomById, createRoom, updateRoom, deleteRoom, seedRooms };
+const getSearchSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.length < 2) {
+      return sendSuccess(res, "Query too short", { suggestions: [] });
+    }
+
+    const searchRegex = new RegExp(q, "i");
+
+    // Get room titles
+    const roomTitles = await Room.find({
+      status: "available",
+      title: searchRegex
+    })
+      .select("title district")
+      .limit(3)
+      .lean();
+
+    // Get unique districts
+    const districts = await Room.distinct("district", {
+      status: "available",
+      district: searchRegex
+    });
+
+    const suggestions = [];
+
+    // Add room suggestions
+    roomTitles.forEach(room => {
+      suggestions.push({
+        type: "room",
+        text: room.title,
+        subtitle: room.district,
+        icon: "house-door"
+      });
+    });
+
+    // Add district suggestions
+    districts.slice(0, 2).forEach(district => {
+      suggestions.push({
+        type: "location",
+        text: district,
+        subtitle: "Khu vực",
+        icon: "geo-alt"
+      });
+    });
+
+    return sendSuccess(res, "Suggestions fetched successfully", {
+      suggestions: suggestions.slice(0, 5)
+    });
+  } catch (error) {
+    console.error("Get search suggestions error:", error);
+    return sendError(res, "Server error while fetching suggestions", null, 500);
+  }
+};
+
+module.exports = {
+  getRooms,
+  getRoomById,
+  createRoom,
+  updateRoom,
+  deleteRoom,
+  seedRooms,
+  getSearchSuggestions
+};

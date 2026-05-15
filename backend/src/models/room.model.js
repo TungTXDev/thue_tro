@@ -9,6 +9,9 @@ const roomSchema = new mongoose.Schema(
     image: { type: String },
     description: { type: String },
     amenities: { type: [String], default: [] },
+    // bedrooms: { type: Number, default: 1 },
+    // bathrooms: { type: Number, default: 1 },
+    // area: { type: Number, default: 25 }, // m²
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     ownerName: { type: String },
     status: {
