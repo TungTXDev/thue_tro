@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,100 +11,254 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/landlord.css">
+    <link rel="stylesheet" href="css/tenant-modal.css">
 </head>
-<body class="dashboard-body">
-<div class="dashboard-shell">
-    <aside class="dashboard-sidebar landlord-sidebar">
-        <a href="index.html" class="dashboard-brand">
-            <i class="bi bi-buildings"></i>
-            <span>Thuê Phòng</span>
-        </a>
-        <div class="sidebar-label">Chủ trọ</div>
-        <nav class="sidebar-nav">
-            <a href="#overview" class="active"><i class="bi bi-speedometer2"></i> Tổng quan</a>
-            <a href="#rooms"><i class="bi bi-houses"></i> Phòng của tôi</a>
-            <a href="#orders"><i class="bi bi-calendar-check"></i> Lịch đặt xem</a>
-            <a href="index.html"><i class="bi bi-house-door"></i> Trang thuê trọ</a>
-        </nav>
-        <button onclick="logout()" class="btn btn-outline-light w-100 mt-auto">
-            <i class="bi bi-box-arrow-right"></i> Đăng xuất
-        </button>
-    </aside>
 
-    <main class="dashboard-main">
-        <div class="dashboard-topbar">
-            <div>
-                <p class="dashboard-kicker">Landlord dashboard</p>
-                <h1>Quản lý phòng trọ</h1>
+<body class="dashboard-body">
+    <div class="dashboard-shell">
+        <aside class="dashboard-sidebar landlord-sidebar">
+            <a href="index.html" class="dashboard-brand">
+                <i class="bi bi-buildings"></i>
+                <span>Thuê Phòng</span>
+            </a>
+            <div class="sidebar-label">Chủ trọ</div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="active"><i class="bi bi-speedometer2"></i> Tổng quan</a>
+                <a href="#rooms"><i class="bi bi-houses"></i> Phòng của tôi</a>
+                <a href="#history"><i class="bi bi-clock-history"></i> Lịch sử thuê</a>
+                <a href="index.html"><i class="bi bi-house-door"></i> Trang thuê trọ</a>
+            </nav>
+            <button onclick="logout()" class="btn btn-outline-light w-100 mt-auto">
+                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+            </button>
+        </aside>
+
+        <main class="dashboard-main">
+            <div class="dashboard-topbar">
+                <div>
+                    <p class="dashboard-kicker">Landlord dashboard</p>
+                    <h1>Quản lý phòng trọ</h1>
+                </div>
+                <div class="dashboard-user">
+                    <i class="bi bi-person-circle"></i>
+                    <span id="dashboard-user-name">Chủ trọ</span>
+                </div>
             </div>
-            <div class="dashboard-user">
-                <i class="bi bi-person-circle"></i>
-                <span id="dashboard-user-name">Chủ trọ</span>
+
+            <section id="overview" class="dashboard-grid">
+                <div class="metric-card">
+                    <span class="metric-icon"><i class="bi bi-houses"></i></span>
+                    <p>Phòng đang quản lý</p>
+                    <div id="landlord-total-rooms" class="stat-val">0</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-icon"><i class="bi bi-check-circle"></i></span>
+                    <p>Phòng còn trống</p>
+                    <div id="landlord-available-rooms" class="stat-val">0</div>
+                </div>
+            </section>
+
+            <section id="rooms" class="dashboard-panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="dashboard-kicker">Rooms</p>
+                        <h2>Phòng của tôi</h2>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="openCreateRoomModal()">
+                        <i class="bi bi-plus-circle"></i> Thêm phòng
+                    </button>
+                </div>
+                <div id="landlord-room-list" class="landlord-room-list"></div>
+            </section>
+
+            <section id="history" class="dashboard-panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="dashboard-kicker">Rental History</p>
+                        <h2>Lịch sử cho thuê phòng</h2>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-primary active"
+                            onclick="filterHistory('all')">
+                            Tất cả
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="filterHistory('active')">
+                            Đang thuê
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            onclick="filterHistory('completed')">
+                            Đã trả
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Phòng</th>
+                                <th>Người thuê</th>
+                                <th>Liên hệ</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
+                                <th>Giá thuê</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rental-history-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Room Modal -->
+    <div class="modal fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-custom-60 modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomModalLabel">Thêm phòng mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="roomForm" onsubmit="handleRoomSubmit(event)">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="roomTitle" class="form-label">Tiêu đề phòng <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="roomTitle" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="roomCategory" class="form-label">Loại phòng <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="roomCategory" required>
+                                    <option value="">Chọn loại phòng</option>
+                                    <option value="KTX">KTX</option>
+                                    <option value="Phòng trọ">Phòng trọ</option>
+                                    <option value="Chung cư mini">Chung cư mini</option>
+                                    <option value="Nhà nguyên căn">Nhà nguyên căn</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="roomPrice" class="form-label">Giá thuê (VNĐ/tháng) <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="roomPrice" placeholder="VD: 3000000"
+                                    required oninput="formatPriceInput(this)">
+                                <small class="text-muted" id="priceDisplay"></small>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="roomProvince" class="form-label">Tỉnh/Thành phố <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="roomProvince" required onchange="loadDistricts()">
+                                    <option value="">Chọn tỉnh/thành</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="roomDistrict" class="form-label">Quận/Huyện <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="roomDistrict" required onchange="loadWards()">
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="roomWard" class="form-label">Phường/Xã <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="roomWard" required>
+                                    <option value="">Chọn phường/xã</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="roomDescription" class="form-label">Mô tả</label>
+                                <textarea class="form-control" id="roomDescription" rows="3"></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Tiện ích</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Wifi" id="amenityWifi">
+                                            <label class="form-check-label" for="amenityWifi">Wifi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Máy lạnh" id="amenityAC">
+                                            <label class="form-check-label" for="amenityAC">Máy lạnh</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Tủ lạnh" id="amenityFridge">
+                                            <label class="form-check-label" for="amenityFridge">Tủ lạnh</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Máy giặt" id="amenityWasher">
+                                            <label class="form-check-label" for="amenityWasher">Máy giặt</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Chỗ để xe" id="amenityParking">
+                                            <label class="form-check-label" for="amenityParking">Chỗ để xe</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="amenities"
+                                                value="Bảo vệ 24/7" id="amenitySecurity">
+                                            <label class="form-check-label" for="amenitySecurity">Bảo vệ 24/7</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">
+                                    <i class="bi bi-images"></i> Hình ảnh phòng (Tối đa 5 ảnh)
+                                </label>
+                                <input type="file" class="d-none" id="roomImages" accept="image/*" multiple
+                                    onchange="handleImageSelect(event)">
+                                <div class="image-upload-grid" id="imageUploadGrid">
+                                    <!-- JavaScript will render slots here -->
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle"></i> Chấp nhận: JPG, PNG, WebP. Mỗi ảnh tối đa 5MB
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu phòng</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <section id="overview" class="dashboard-grid">
-            <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-houses"></i></span>
-                <p>Phòng đang quản lý</p>
-                <div id="landlord-total-rooms" class="stat-val">0</div>
-            </div>
-            <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-check-circle"></i></span>
-                <p>Phòng còn trống</p>
-                <div id="landlord-available-rooms" class="stat-val">0</div>
-            </div>
-            <div class="metric-card">
-                <span class="metric-icon"><i class="bi bi-calendar-check"></i></span>
-                <p>Đơn liên quan</p>
-                <div id="landlord-total-orders" class="stat-val">0</div>
-            </div>
-        </section>
-
-        <section id="rooms" class="dashboard-panel">
-            <div class="panel-header">
-                <div>
-                    <p class="dashboard-kicker">Rooms</p>
-                    <h2>Phòng của tôi</h2>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="alert('Tính năng đăng phòng sẽ được bổ sung ở bước tiếp theo.')">
-                    <i class="bi bi-plus-circle"></i> Thêm phòng
-                </button>
-            </div>
-            <div id="landlord-room-list" class="landlord-room-list"></div>
-        </section>
-
-        <section id="orders" class="dashboard-panel">
-            <div class="panel-header">
-                <div>
-                    <p class="dashboard-kicker">Bookings</p>
-                    <h2>Lịch đặt xem phòng</h2>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>Ngày đặt</th>
-                            <th>Khách hàng</th>
-                            <th>Tên phòng</th>
-                            <th>Giá thanh toán</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="landlord-order-table-body"></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/core/storage.js"></script>
-<script src="js/core/utils.js"></script>
-<script src="js/core/apiClient.js"></script>
-<script src="js/services/roomApi.js"></script>
-<script src="js/features/auth.js"></script>
-<script src="js/pages/landlord.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/core/storage.js"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/apiClient.js"></script>
+    <script src="js/services/roomApi.js"></script>
+    <script src="js/services/rentalHistoryApi.js"></script>
+    <script src="js/utils/addressApi.js"></script>
+    <script src="js/features/auth.js"></script>
+    <script src="js/pages/landlord.js"></script>
 </body>
+
 </html>

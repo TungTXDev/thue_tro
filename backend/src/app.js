@@ -10,6 +10,7 @@ const reviewRoutes = require("./routes/review.routes");
 const couponRoutes = require("./routes/coupon.routes");
 const orderRoutes = require("./routes/order.routes");
 const adminRoutes = require("./routes/admin.routes");
+const rentalHistoryRoutes = require("./routes/rentalHistory.routes");
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/rental-history", rentalHistoryRoutes);
 
 app.use((req, res) => {
   return sendError(res, "Route not found", null, 404);

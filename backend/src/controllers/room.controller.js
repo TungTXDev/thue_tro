@@ -1,5 +1,7 @@
 const { Room } = require("../models/room.model");
+const { RentalHistory } = require("../models/rentalHistory.model");
 const { sendSuccess, sendError } = require("../utils/response");
+const cloudinary = require("../config/cloudinary");
 
 const canManageRoom = (user, room) => {
   if (!user) return false;
@@ -10,7 +12,13 @@ const canManageRoom = (user, room) => {
 const getRooms = async (req, res) => {
   try {
     const { search, category, minPrice, maxPrice, district, ownerId } = req.query;
-    const query = { status: "available" };
+    const query = { status: { $ne: "deleted" } }; // Exclude deleted rooms
+
+    // Only filter by status if NOT querying by ownerId (landlord view)
+    // Public search should only show available rooms
+    if (!ownerId) {
+      query.status = "available";
+    }
 
     if (search) query.title = { $regex: search, $options: "i" };
     if (category) query.category = category;
@@ -47,10 +55,50 @@ const getRoomById = async (req, res) => {
 
 const createRoom = async (req, res) => {
   try {
-    const { title, category, price, district, image, description, amenities } = req.body;
+    const { title, category, price, district, description, amenities } = req.body;
 
     if (!title || !category || !price || !district) {
       return sendError(res, "title, category, price, and district are required", null, 400);
+    }
+
+    let imageUrls = [];
+
+    // Upload multiple images to Cloudinary if provided
+    if (req.files && req.files.length > 0) {
+      console.log(`Uploading ${req.files.length} images to Cloudinary...`);
+
+      try {
+        const uploadPromises = req.files.map((file, index) => {
+          return new Promise((resolve, reject) => {
+            console.log(`Uploading image ${index + 1}: ${file.originalname}, size: ${(file.size / 1024).toFixed(2)}KB`);
+
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: "rooms",
+                resource_type: "image",
+              },
+              (error, result) => {
+                if (error) {
+                  console.error(`Upload error for image ${index + 1}:`, error);
+                  reject(error);
+                } else {
+                  console.log(`Successfully uploaded image ${index + 1}: ${result.secure_url}`);
+                  resolve(result.secure_url);
+                }
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        });
+
+        imageUrls = await Promise.all(uploadPromises);
+        console.log(`All ${imageUrls.length} images uploaded successfully`);
+      } catch (uploadError) {
+        console.error("Cloudinary upload error:", uploadError);
+        return sendError(res, "Failed to upload images to Cloudinary", null, 500);
+      }
+    } else {
+      console.log("No images provided in request");
     }
 
     const room = await Room.create({
@@ -58,9 +106,10 @@ const createRoom = async (req, res) => {
       category,
       price: Number(price),
       district,
-      image,
+      image: imageUrls[0] || null, // First image as main image for backward compatibility
+      images: imageUrls,
       description,
-      amenities,
+      amenities: amenities ? (Array.isArray(amenities) ? amenities : JSON.parse(amenities)) : [],
       ownerId: req.user ? req.user._id : undefined,
       ownerName: req.user ? req.user.name : undefined,
       status: "available",
@@ -84,7 +133,68 @@ const updateRoom = async (req, res) => {
       return sendError(res, "You do not have permission to update this room", null, 403);
     }
 
-    Object.assign(room, req.body);
+    const { title, category, price, district, description, amenities } = req.body;
+
+    // Upload new images to Cloudinary if provided
+    if (req.files && req.files.length > 0) {
+      console.log(`Updating room with ${req.files.length} new images...`);
+
+      try {
+        // Delete old images from Cloudinary if exists
+        if (room.images && room.images.length > 0) {
+          console.log(`Deleting ${room.images.length} old images from Cloudinary...`);
+          const deletePromises = room.images
+            .filter(img => img && img.includes("cloudinary.com"))
+            .map(img => {
+              const publicId = img.split("/").slice(-2).join("/").split(".")[0];
+              return cloudinary.uploader.destroy(publicId).catch(err => console.error("Delete error:", err));
+            });
+          await Promise.all(deletePromises);
+        }
+
+        // Upload new images
+        const uploadPromises = req.files.map((file, index) => {
+          return new Promise((resolve, reject) => {
+            console.log(`Uploading new image ${index + 1}: ${file.originalname}, size: ${(file.size / 1024).toFixed(2)}KB`);
+
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: "rooms",
+                resource_type: "image",
+              },
+              (error, result) => {
+                if (error) {
+                  console.error(`Upload error for image ${index + 1}:`, error);
+                  reject(error);
+                } else {
+                  console.log(`Successfully uploaded image ${index + 1}: ${result.secure_url}`);
+                  resolve(result.secure_url);
+                }
+              }
+            );
+            uploadStream.end(file.buffer);
+          });
+        });
+
+        const imageUrls = await Promise.all(uploadPromises);
+        console.log(`All ${imageUrls.length} new images uploaded successfully`);
+        room.images = imageUrls;
+        room.image = imageUrls[0] || room.image; // Update main image
+      } catch (uploadError) {
+        console.error("Cloudinary upload error:", uploadError);
+        return sendError(res, "Failed to upload images to Cloudinary", null, 500);
+      }
+    }
+
+    if (title) room.title = title;
+    if (category) room.category = category;
+    if (price) room.price = Number(price);
+    if (district) room.district = district;
+    if (description !== undefined) room.description = description;
+    if (amenities) {
+      room.amenities = Array.isArray(amenities) ? amenities : JSON.parse(amenities);
+    }
+
     await room.save();
 
     return sendSuccess(res, "Room updated successfully", { room });
@@ -210,6 +320,99 @@ const getSearchSuggestions = async (req, res) => {
   }
 };
 
+// Add tenant to room
+const addTenant = async (req, res) => {
+  try {
+    const room = await Room.findById(req.params.id);
+    if (!room || room.status === "deleted") {
+      return sendError(res, "Room not found", null, 404);
+    }
+
+    if (!canManageRoom(req.user, room)) {
+      return sendError(res, "You do not have permission to manage this room", null, 403);
+    }
+
+    const { name, email, phone, startDate, endDate, userId } = req.body;
+
+    if (!name || !email || !phone) {
+      return sendError(res, "Name, email, and phone are required", null, 400);
+    }
+
+    const tenantData = {
+      name,
+      email,
+      phone,
+      startDate: startDate ? new Date(startDate) : new Date(),
+      endDate: endDate ? new Date(endDate) : null,
+    };
+
+    if (userId) {
+      tenantData.userId = userId;
+    }
+
+    room.tenant = tenantData;
+    room.status = "rented";
+
+    await room.save();
+
+    // Create rental history record
+    await RentalHistory.create({
+      roomId: room._id,
+      roomTitle: room.title,
+      landlordId: room.ownerId,
+      tenantId: userId || null,
+      tenantName: name,
+      tenantEmail: email,
+      tenantPhone: phone,
+      startDate: tenantData.startDate,
+      endDate: tenantData.endDate,
+      price: room.price,
+      status: "active",
+    });
+
+    return sendSuccess(res, "Tenant added successfully", { room });
+  } catch (error) {
+    console.error("Add tenant error:", error);
+    return sendError(res, "Server error while adding tenant", null, 500);
+  }
+};
+
+// Remove tenant from room
+const removeTenant = async (req, res) => {
+  try {
+    const room = await Room.findById(req.params.id);
+    if (!room || room.status === "deleted") {
+      return sendError(res, "Room not found", null, 404);
+    }
+
+    if (!canManageRoom(req.user, room)) {
+      return sendError(res, "You do not have permission to manage this room", null, 403);
+    }
+
+    // Update rental history to completed
+    await RentalHistory.findOneAndUpdate(
+      {
+        roomId: room._id,
+        status: "active",
+      },
+      {
+        status: "completed",
+        actualEndDate: new Date(),
+      }
+    );
+
+    room.tenant = undefined;
+    room.status = "available";
+
+    await room.save();
+
+    return sendSuccess(res, "Tenant removed successfully", { room });
+  } catch (error) {
+    console.error("Remove tenant error:", error);
+    return sendError(res, "Server error while removing tenant", null, 500);
+  }
+};
+
 module.exports = {
   getRooms,
   getRoomById,
@@ -217,5 +420,7 @@ module.exports = {
   updateRoom,
   deleteRoom,
   seedRooms,
-  getSearchSuggestions
+  getSearchSuggestions,
+  addTenant,
+  removeTenant
 };

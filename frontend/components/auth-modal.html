@@ -1,0 +1,43 @@
+<!-- Auth Modal Component -->
+<div id="auth-modal" class="auth-modal"
+    style="display: none !important; opacity: 0 !important; visibility: hidden !important;">
+    <div class="auth-modal-overlay" onclick="closeAuthModal()"></div>
+    <div class="auth-modal-content">
+        <button class="auth-modal-close" onclick="closeAuthModal()">&times;</button>
+
+        <section class="auth-section">
+            <h2 id="auth-title">Đăng Nhập</h2>
+            <p class="auth-desc" id="auth-desc">Chào mừng bạn trở lại! Đăng nhập để tiếp tục.</p>
+
+            <form id="auth-form">
+                <div class="form-group mb-3" id="name-group" style="display: none;">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" id="auth-name" class="form-control" placeholder="VD: Nguyễn Văn A">
+                </div>
+                <div class="form-group mb-3" id="role-group" style="display: none;">
+                    <label class="form-label">Vai trò</label>
+                    <select id="auth-role" class="form-select">
+                        <option value="user">Người thuê trọ</option>
+                        <option value="landlord">Chủ trọ</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Email đăng nhập</label>
+                    <input type="email" id="auth-email" class="form-control" placeholder="VD: sinhvien@gmail.com"
+                        required>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" id="auth-pass" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="auth-btn">Đăng Nhập</button>
+            </form>
+
+            <div class="divider"><span>Hoặc</span></div>
+
+            <p class="auth-link" id="auth-toggle-text">
+                Bạn chưa có tài khoản? <a href="javascript:void(0)" onclick="toggleAuthMode()">Đăng ký ngay</a>
+            </p>
+        </section>
+    </div>
+</div>

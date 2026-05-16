@@ -16,13 +16,21 @@ function redirectByRole(user) {
     }
     if (role === "landlord") {
         window.location.href = "landlord.html";
+        return;
+    }
+    // User thường: đóng modal và cập nhật header
+    if (typeof closeAuthModal === 'function') {
+        closeAuthModal();
+    }
+    if (typeof updateHeader === 'function') {
+        updateHeader();
     }
 }
 
 // 1. Hàm chuyển đổi qua lại giữa Đăng Ký và Đăng Nhập
 function toggleAuthMode() {
     isRegisterMode = !isRegisterMode;
-    
+
     // Đổi tiêu đề và mô tả
     const authTitle = document.getElementById('auth-title');
     const authDesc = document.getElementById('auth-desc');
@@ -48,9 +56,9 @@ function setupAuthForm() {
     const authForm = document.getElementById('auth-form');
     if (!authForm) return;
 
-    authForm.addEventListener('submit', async function(event) {
+    authForm.addEventListener('submit', async function (event) {
         event.preventDefault(); // Chặn web tự tải lại
-        
+
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-pass').value;
 
@@ -60,7 +68,7 @@ function setupAuthForm() {
             const roleInput = document.getElementById('auth-role');
             const name = (nameInput && nameInput.value) ? nameInput.value : 'Người dùng ẩn danh';
             const role = roleInput ? roleInput.value : 'user';
-            
+
             const userData = { name: name, email: email, password: pass, role }; // API dùng 'password', localStorage cũ dùng 'pass'
             const localData = { name: name, email: email, pass: pass, role };
 
@@ -98,7 +106,7 @@ function setupAuthForm() {
                 if (demoUsers[email]) {
                     savedUser = demoUsers[email];
                 }
-                
+
                 if (savedUser && savedUser.email === email && savedUser.pass === pass) {
                     setStorage(STORAGE_KEYS.CURRENT_USER, savedUser);
                     alert("Đăng nhập thành công (Offline)! Chào mừng trở lại.");
@@ -112,7 +120,7 @@ function setupAuthForm() {
 
         // Xóa trống các ô nhập sau khi thành công
         this.reset();
-        
+
         // Gọi hàm cập nhật thanh Header
         updateHeader();
     });
@@ -122,33 +130,44 @@ function setupAuthForm() {
 function updateHeader() {
     const savedUser = getStorage(STORAGE_KEYS.CURRENT_USER);
     const userIconsDiv = document.querySelector('.user-icons');
-    const navLinks = document.querySelector('.nav-links'); 
+    const navLinks = document.querySelector('.nav-links');
     const authSection = document.getElementById('auth-section');
 
     if (!userIconsDiv || !navLinks) return; // Tránh lỗi ở trang không có header
 
-    // 1. Xóa các nút cũ trong menu để tránh bị lặp khi load lại
-    // Giữ lại các mục mặc định (Trang chủ, Tìm phòng...)
-    navLinks.innerHTML = `
-        <li class="nav-item"><a href="index.html" class="nav-link">Trang chủ</a></li>
-        <li class="nav-item"><a href="#room-grid" class="nav-link">Tìm phòng</a></li>
-        <li class="dropdown nav-item">
-            <a href="javascript:void(0)" class="dropbtn nav-link">Hỗ trợ ▾</a>
-            <div class="dropdown-content">
-                <a href="javascript:void(0)" onclick="toggleAIChat()"><i class="bi bi-chat-dots"></i> Chat với AI</a>
-                <a href="tel:0987654321"><i class="bi bi-telephone"></i> Gọi: 0987.654.321</a>
-            </div>
-        </li>
-    `;
+    // 1. Xóa các link admin/landlord cũ nếu có (để tránh duplicate)
+    const existingAdminLink = navLinks.querySelector('a[href="admin.html"]');
+    const existingLandlordLink = navLinks.querySelector('a[href="landlord.html"]');
+    if (existingAdminLink) existingAdminLink.parentElement.remove();
+    if (existingLandlordLink) existingLandlordLink.parentElement.remove();
 
     if (savedUser) {
-        // 2. KIỂM TRA QUYỀN ADMIN: 
+        // 2. KIỂM TRA QUYỀN VÀ THÊM LINK TƯƠNG ỨNG
         const role = getUserRole(savedUser);
+
+        // Tìm vị trí để insert (trước dropdown "Hỗ trợ")
+        const supportDropdown = navLinks.querySelector('.dropdown');
+
         if (role === "admin") {
-            navLinks.innerHTML += `<li class="nav-item"><a href="admin.html" class="admin-link nav-link"><i class="bi bi-speedometer2"></i> Admin</a></li>`;
+            const adminLi = document.createElement('li');
+            adminLi.className = 'nav-item';
+            adminLi.innerHTML = `<a href="admin.html" class="admin-link nav-link"><i class="bi bi-speedometer2"></i> Admin</a>`;
+            if (supportDropdown) {
+                navLinks.insertBefore(adminLi, supportDropdown);
+            } else {
+                navLinks.appendChild(adminLi);
+            }
         }
+
         if (role === "landlord") {
-            navLinks.innerHTML += `<li class="nav-item"><a href="landlord.html" class="admin-link nav-link"><i class="bi bi-houses"></i> Chủ trọ</a></li>`;
+            const landlordLi = document.createElement('li');
+            landlordLi.className = 'nav-item';
+            landlordLi.innerHTML = `<a href="landlord.html" class="admin-link nav-link"><i class="bi bi-houses"></i> Chủ trọ</a>`;
+            if (supportDropdown) {
+                navLinks.insertBefore(landlordLi, supportDropdown);
+            } else {
+                navLinks.appendChild(landlordLi);
+            }
         }
 
         // 3. Hiển thị lời chào và nút Đăng xuất
@@ -156,22 +175,22 @@ function updateHeader() {
             <span class="welcome-text"><i class="bi bi-person-circle"></i> Chào, ${escapeHTML(savedUser.name)}!</span>
             <a href="javascript:void(0)" onclick="logout()" class="btn btn-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
         `;
-        
+
         // Ẩn khung đăng ký ở cuối trang
-        if(authSection) authSection.style.display = 'none';
+        if (authSection) authSection.style.display = 'none';
     } else {
         // 4. Nếu chưa đăng nhập -> Hiện nút Đăng ký ban đầu
         userIconsDiv.innerHTML = `
-            <a href="#auth-section" class="btn btn-primary btn-header"><i class="bi bi-person-circle"></i> Đăng ký / Đăng nhập</a>
+            <a href="javascript:void(0)" onclick="openAuthModal()" class="btn btn-primary btn-header"><i class="bi bi-person-circle"></i> Đăng ký / Đăng nhập</a>
         `;
-        if(authSection) authSection.style.display = 'block';
+        if (authSection) authSection.style.display = 'none';
     }
 }
 
 // 4. Hàm Đăng xuất
 function logout() {
-    if(confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-        removeStorage(STORAGE_KEYS.CURRENT_USER); 
+    if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+        removeStorage(STORAGE_KEYS.CURRENT_USER);
         localStorage.removeItem('authToken');
         if (window.location.pathname.endsWith('/admin.html') || window.location.pathname.endsWith('/landlord.html')) {
             window.location.href = "index.html";
@@ -187,3 +206,54 @@ window.updateHeader = updateHeader;
 window.getUserRole = getUserRole;
 window.redirectByRole = redirectByRole;
 window.setupAuthForm = setupAuthForm;
+
+
+// Modal functions - Define on window immediately
+window.openAuthModal = function () {
+    console.log('openAuthModal called');
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+        console.log('Modal found, adding show class');
+        // Remove inline styles to allow CSS to work
+        modal.style.display = '';
+        modal.style.opacity = '';
+        modal.style.visibility = '';
+
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        void modal.offsetWidth;
+
+        // Check computed styles
+        const styles = window.getComputedStyle(modal);
+        console.log('Modal display:', styles.display);
+        console.log('Modal z-index:', styles.zIndex);
+        console.log('Modal opacity:', styles.opacity);
+        console.log('Modal visibility:', styles.visibility);
+    } else {
+        console.error('Modal element #auth-modal not found!');
+    }
+};
+
+window.closeAuthModal = function () {
+    console.log('closeAuthModal called');
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+
+        // Restore inline styles to hide modal completely
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.style.opacity = '0';
+            modal.style.visibility = 'hidden';
+        }, 300); // Wait for transition to complete
+    }
+};
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        window.closeAuthModal();
+    }
+});
+

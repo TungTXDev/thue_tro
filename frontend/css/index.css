@@ -1,8 +1,6 @@
 /* ======================== HERO SECTION ======================== */
 .hero {
-    background-image: linear-gradient(rgba(13, 31, 53, 0.62), rgba(13, 31, 53, 0.5)), url('https://images.unsplash.com/photo-1596464716127-f2a82984de30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-    background-size: cover;
-    background-position: center;
+    position: relative;
     min-height: 420px;
     display: flex;
     flex-direction: column;
@@ -12,6 +10,38 @@
     text-align: center;
     padding: 0 20px;
     border-bottom: 4px solid var(--accent-color);
+    overflow: hidden;
+}
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(13, 31, 53, 0.62), rgba(13, 31, 53, 0.5));
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hero h2 {
@@ -29,6 +59,96 @@
 }
 
 /* ======================== FILTER & GRID ======================== */
+
+/* Search Autocomplete */
+.search-autocomplete-wrapper {
+    position: relative;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-suggestions.show {
+    display: block;
+}
+
+.search-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+    background: #0077b6;
+    border-radius: 3px;
+}
+
+.search-suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.search-suggestion-item:hover {
+    background: #f0f8ff;
+}
+
+.search-suggestion-item i {
+    color: #0077b6;
+    font-size: 14px;
+}
+
+.search-suggestion-text {
+    flex: 1;
+}
+
+.search-suggestion-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d3436;
+    margin-bottom: 2px;
+}
+
+.search-suggestion-subtitle {
+    font-size: 11px;
+    color: #636e72;
+}
+
+.search-suggestion-highlight {
+    background: #fff3cd;
+    font-weight: 600;
+}
+
+.search-no-results {
+    padding: 16px 12px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+}
+
 .section-header {
     text-align: center;
     margin-bottom: 30px;
@@ -76,29 +196,415 @@
 
 .room-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 24px;
 }
 
-/* ======================== AUTH SECTION ======================== */
-#auth-section * {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, sans-serif;
+/* ======================== ROOM CARD ======================== */
+.room-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
 }
 
-#auth-section {
-    background-color: #ffffff;
-    padding: 32px;
-    margin-top: 40px;
-    max-width: 560px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 14px;
+.room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-#auth-section h2,
-#auth-section .auth-desc {
+.room-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.room-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.room-card:hover .room-card-image {
+    transform: scale(1.05);
+}
+
+.room-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2ecc71;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+}
+
+.room-card-badge i {
+    font-size: 14px;
+}
+
+.room-card-image-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+}
+
+.room-card-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.room-card:hover .room-card-nav {
+    opacity: 1;
+}
+
+.room-card-nav:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.room-card-nav-prev {
+    left: 8px;
+}
+
+.room-card-nav-next {
+    right: 8px;
+}
+
+.room-card-body {
+    padding: 16px;
+}
+
+.room-card-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.room-card-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2ecc71;
+}
+
+.room-card-price-unit {
+    font-size: 13px;
+    color: #888;
+    font-weight: 400;
+}
+
+.room-card-posted {
+    font-size: 12px;
+    color: #888;
+}
+
+.room-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3436;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 20px;
+}
+
+.room-card-location {
+    font-size: 14px;
+    color: #636e72;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.room-card-location i {
+    color: #888;
+}
+
+.room-card-specs {
+    display: flex;
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.room-card-spec {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #636e72;
+}
+
+.room-card-spec i {
+    font-size: 16px;
+    color: #888;
+}
+
+/* ======================== AUTH MODAL ======================== */
+.auth-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+.auth-modal.show {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.auth-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 999998 !important;
+}
+
+.auth-modal-content {
+    position: relative !important;
+    z-index: 999999 !important;
+    max-width: 480px !important;
+    width: 100% !important;
+    max-height: 85vh !important;
+    background: white !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4) !important;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    overflow: hidden !important;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-modal-close {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    font-size: 22px !important;
+    color: #636e72 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    z-index: 1000000 !important;
+    line-height: 1 !important;
+}
+
+.auth-modal-close:hover {
+    background: #ff4757 !important;
+    color: white !important;
+    transform: rotate(90deg) scale(1.1) !important;
+}
+
+/* Auth Section Inside Modal */
+.auth-section {
+    background: white !important;
+    padding: 50px 35px 35px 35px !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+
+    /* Custom scrollbar */
+    scrollbar-width: thin !important;
+    scrollbar-color: #ddd transparent !important;
+}
+
+.auth-section::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.auth-section::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.auth-section::-webkit-scrollbar-thumb {
+    background: #ddd !important;
+    border-radius: 10px !important;
+}
+
+.auth-section::-webkit-scrollbar-thumb:hover {
+    background: #bbb !important;
+}
+
+.auth-section h2 {
+    text-align: center !important;
+    color: #1877f2 !important;
+    font-size: 28px !important;
+    margin-bottom: 8px !important;
+    font-weight: 700 !important;
+}
+
+.auth-section .auth-desc {
+    text-align: center !important;
+    color: #636e72 !important;
+    font-size: 14px !important;
+    margin-bottom: 30px !important;
+    line-height: 1.5 !important;
+}
+
+.auth-section .form-label {
+    font-weight: 600 !important;
+    color: #2d3436 !important;
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+}
+
+.auth-section .form-control,
+.auth-section .form-select {
+    padding: 12px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.auth-section .form-control:focus,
+.auth-section .form-select:focus {
+    border-color: #1877f2 !important;
+    box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.1) !important;
+    outline: none !important;
+}
+
+.auth-section .btn-primary {
+    padding: 14px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, #1877f2 0%, #0d5fd3 100%) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.auth-section .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(24, 119, 242, 0.4) !important;
+}
+
+.auth-section .divider {
+    display: flex;
+    align-items: center;
     text-align: center;
+    margin: 24px 0;
+    color: #888;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.auth-section .divider::before {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.auth-section .divider span {
+    padding: 0 14px;
+    background: #fff;
+}
+
+.auth-section .auth-link {
+    text-align: center !important;
+    font-size: 14px !important;
+    color: #636e72 !important;
+    margin: 0 !important;
+}
+
+.auth-section .auth-link a {
+    color: #1877f2 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.auth-section .auth-link a:hover {
+    color: #0d5fd3 !important;
+    text-decoration: underline !important;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .auth-modal-content {
+        max-width: 100% !important;
+        border-radius: 15px !important;
+    }
+
+    .auth-section {
+        padding: 45px 25px 25px 25px !important;
+    }
+
+    .auth-section h2 {
+        font-size: 24px !important;
+    }
 }
 
 .auth-wrapper {
@@ -195,94 +701,6 @@
 
 .toggle-link a:hover {
     text-decoration: underline;
-}
-
-/* ======================== AI CHAT ======================== */
-.chat-box {
-    display: none;
-    position: fixed;
-    bottom: 80px;
-    right: 30px;
-    width: 320px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    overflow: hidden;
-    border: 1px solid #eee;
-}
-
-.chat-header {
-    background: #1877f2;
-    color: white;
-    padding: 14px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chat-title {
-    font-weight: bold;
-}
-
-.chat-close {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-.chat-content {
-    height: 300px;
-    padding: 15px;
-    overflow-y: auto;
-    background: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.chat-message {
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 14px;
-    max-width: 80%;
-}
-
-.bot-message {
-    background: #eee;
-    align-self: flex-start;
-}
-
-.user-message {
-    background: #1877f2;
-    color: white;
-    align-self: flex-end;
-}
-
-.chat-input-area {
-    padding: 10px;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 8px;
-}
-
-.chat-input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-}
-
-.chat-send {
-    background: #1877f2;
-    color: white;
-    border: none;
-    padding: 5px 15px;
-    border-radius: 20px;
-    cursor: pointer;
 }
 
 /* ======================== EMPTY MESSAGE ======================== */

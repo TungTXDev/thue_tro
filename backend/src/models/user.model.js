@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "blocked"],
       default: "active",
     },
+    bookmarkedRooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
   },
   { timestamps: true }
 );

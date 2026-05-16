@@ -6,7 +6,8 @@ const roomSchema = new mongoose.Schema(
     category: { type: String, required: true, trim: true },
     price: { type: Number, required: true, min: 0 },
     district: { type: String, required: true, trim: true },
-    image: { type: String },
+    image: { type: String }, // Main image (backward compatible)
+    images: { type: [String], default: [] }, // Multiple images array
     description: { type: String },
     amenities: { type: [String], default: [] },
     // bedrooms: { type: Number, default: 1 },
@@ -14,9 +15,17 @@ const roomSchema = new mongoose.Schema(
     // area: { type: Number, default: 25 }, // m²
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     ownerName: { type: String },
+    tenant: {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      name: { type: String },
+      email: { type: String },
+      phone: { type: String },
+      startDate: { type: Date },
+      endDate: { type: Date },
+    },
     status: {
       type: String,
-      enum: ["available", "hidden", "deleted"],
+      enum: ["available", "rented", "hidden", "deleted"],
       default: "available",
     },
   },

@@ -1,0 +1,780 @@
+/* ===================================
+   LANDLORD DASHBOARD STYLES
+   =================================== */
+
+/* Custom modal width - 60% of viewport */
+.modal-custom-60 {
+    max-width: 60vw !important;
+    width: 60vw !important;
+}
+
+/* Ensure modal dialog takes full width */
+.modal-custom-60.modal-dialog {
+    max-width: 60vw !important;
+    width: 60vw !important;
+    margin: 1.75rem auto !important;
+}
+
+/* Modal improvements */
+.modal-header {
+    background: linear-gradient(135deg, #14342b 0%, #0a1f19 100%);
+    color: white;
+    border-bottom: none;
+    padding: 20px 24px;
+}
+
+.modal-header .modal-title {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+/* Form styling */
+.form-label {
+    font-weight: 600;
+    color: #172033;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-label i {
+    color: #14342b;
+    margin-right: 4px;
+}
+
+.form-control,
+.form-select {
+    border: 1.5px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #14342b;
+    box-shadow: 0 0 0 3px rgba(20, 52, 43, 0.1);
+}
+
+.form-check {
+    padding: 8px 0;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border: 2px solid #d1d5db;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #14342b;
+    border-color: #14342b;
+}
+
+.form-check-label {
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Image Upload Grid - Button + Design */
+.image-upload-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.image-upload-slot {
+    aspect-ratio: 1;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-upload-slot:hover {
+    border-color: #14342b;
+    background: #e8f5f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 52, 43, 0.15);
+}
+
+.image-upload-slot i.bi-plus-lg {
+    font-size: 32px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.image-upload-slot:hover i.bi-plus-lg {
+    color: #14342b;
+    transform: scale(1.1);
+}
+
+.image-upload-slot>span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    transition: color 0.3s ease;
+}
+
+.image-upload-slot:hover>span {
+    color: #14342b;
+}
+
+/* Filled slot with image */
+.image-upload-slot.filled {
+    border: 2px solid #e2e8f0;
+    background: white;
+    cursor: default;
+    padding: 0;
+}
+
+.image-upload-slot.filled:hover {
+    transform: none;
+    border-color: #14342b;
+}
+
+.image-upload-slot.filled img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.image-upload-slot .image-number {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(20, 52, 43, 0.9);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.image-upload-slot .remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(220, 53, 69, 0.95);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    z-index: 10;
+    opacity: 0;
+}
+
+.image-upload-slot.filled:hover .remove-image-btn {
+    opacity: 1;
+}
+
+.image-upload-slot .remove-image-btn:hover {
+    background: #dc3545;
+    transform: scale(1.15);
+}
+
+/* Container for preview slots */
+.image-preview-slots {
+    display: contents;
+}
+
+/* Button styling */
+.btn-primary {
+    background: linear-gradient(135deg, #14342b 0%, #0a1f19 100%);
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 52, 43, 0.3);
+    background: linear-gradient(135deg, #0a1f19 0%, #14342b 100%);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .modal-custom-60 {
+        max-width: 70vw;
+        width: 70vw;
+    }
+}
+
+@media (max-width: 992px) {
+    .modal-custom-60 {
+        max-width: 85vw;
+        width: 85vw;
+    }
+
+    .image-upload-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-custom-60 {
+        max-width: 95vw;
+        width: 95vw;
+    }
+
+    .image-upload-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .image-upload-slot i.bi-plus-lg {
+        font-size: 24px;
+    }
+
+    .image-upload-slot>span {
+        font-size: 11px;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .modal-header {
+        padding: 16px;
+    }
+
+    .modal-footer {
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .modal-custom-60 {
+        max-width: 100%;
+        width: calc(100% - 1rem);
+        margin: 0.5rem;
+    }
+
+    .image-upload-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* CRITICAL: Force modal width override */
+#roomModal .modal-dialog.modal-custom-60 {
+    max-width: 60vw !important;
+    width: 60vw !important;
+}
+
+@media (min-width: 1400px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-width: 60vw !important;
+        width: 60vw !important;
+    }
+}
+
+@media (max-width: 1399px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-width: 70vw !important;
+        width: 70vw !important;
+    }
+}
+
+@media (max-width: 991px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-width: 85vw !important;
+        width: 85vw !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-width: 95vw !important;
+        width: 95vw !important;
+    }
+}
+
+@media (max-width: 575px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-width: 100% !important;
+        width: calc(100% - 1rem) !important;
+        margin: 0.5rem !important;
+    }
+}
+
+
+/* Ensure modal content takes full width of dialog */
+#roomModal .modal-custom-60 .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Remove any padding/margin that might constrain the modal */
+#roomModal.modal {
+    padding: 0 !important;
+}
+
+#roomModal .modal-dialog {
+    margin: 1.75rem auto !important;
+}
+
+/* Debug: Add visible border to see actual size */
+#roomModal .modal-dialog.modal-custom-60 {
+    border: 2px solid transparent !important;
+}
+
+
+/* SUPER CRITICAL: Override admin.css modal-dialog width */
+.modal#roomModal .modal-dialog.modal-custom-60 {
+    width: 60vw !important;
+    max-width: 60vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+@media (min-width: 1400px) {
+    .modal#roomModal .modal-dialog.modal-custom-60 {
+        width: 60vw !important;
+        max-width: 60vw !important;
+    }
+}
+
+@media (max-width: 1399px) {
+    .modal#roomModal .modal-dialog.modal-custom-60 {
+        width: 70vw !important;
+        max-width: 70vw !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .modal#roomModal .modal-dialog.modal-custom-60 {
+        width: 85vw !important;
+        max-width: 85vw !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .modal#roomModal .modal-dialog.modal-custom-60 {
+        width: 95vw !important;
+        max-width: 95vw !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .modal#roomModal .modal-dialog.modal-custom-60 {
+        width: calc(100% - 1rem) !important;
+        max-width: 100% !important;
+    }
+}
+
+
+/* Fix modal content to take full width */
+#roomModal .modal-content {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+#roomModal .modal-body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 24px !important;
+}
+
+/* Footer should be part of modal-content */
+#roomModal .modal-footer {
+    background: #f8f9fa !important;
+    border-top: 1px solid #dee2e6 !important;
+    padding: 16px 24px !important;
+    margin: 0 !important;
+}
+
+
+/* Label for current images in edit mode */
+.image-upload-slot .image-label {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(20, 52, 43, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* File size badge */
+.image-upload-slot .file-size-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.image-upload-slot .file-size-badge.warning {
+    background: rgba(255, 193, 7, 0.9);
+    color: #000;
+}
+
+.image-upload-slot .file-size-badge.error {
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+}
+
+
+/* Limit modal height to 80vh */
+#roomModal .modal-dialog.modal-custom-60 {
+    max-height: 80vh !important;
+}
+
+#roomModal .modal-content {
+    max-height: 80vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#roomModal .modal-header {
+    flex-shrink: 0 !important;
+}
+
+#roomModal .modal-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    max-height: calc(80vh - 140px) !important;
+}
+
+#roomModal .modal-footer {
+    flex-shrink: 0 !important;
+}
+
+/* Responsive height adjustments */
+@media (max-height: 800px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-height: 90vh !important;
+    }
+
+    #roomModal .modal-content {
+        max-height: 90vh !important;
+    }
+
+    #roomModal .modal-body {
+        max-height: calc(90vh - 140px) !important;
+    }
+}
+
+@media (max-height: 600px) {
+    #roomModal .modal-dialog.modal-custom-60 {
+        max-height: 95vh !important;
+    }
+
+    #roomModal .modal-content {
+        max-height: 95vh !important;
+    }
+
+    #roomModal .modal-body {
+        max-height: calc(95vh - 120px) !important;
+    }
+}
+
+
+/* Fix amenities checkboxes layout */
+#roomModal .form-check {
+    padding: 8px 0 !important;
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#roomModal .form-check-input {
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 8px !important;
+}
+
+#roomModal .form-check-label {
+    display: inline !important;
+    margin-left: 0 !important;
+}
+
+/* Ensure row doesn't overflow */
+#roomModal .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+#roomModal .row>[class*='col-'] {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+
+
+/* Ensure modal-content contains everything properly */
+#roomModal .modal-content {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Make sure form doesn't break the layout */
+#roomModal form {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+#roomModal .modal-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+#roomModal .modal-footer {
+    border-radius: 0 0 12px 12px !important;
+}
+
+
+/* CRITICAL FIX: Ensure footer is always visible */
+#roomModal .modal-dialog {
+    display: flex !important;
+    align-items: center !important;
+    min-height: calc(100vh - 3.5rem) !important;
+}
+
+#roomModal .modal-content {
+    max-height: 80vh !important;
+    height: auto !important;
+}
+
+#roomModal form {
+    max-height: 80vh !important;
+    overflow: hidden !important;
+}
+
+#roomModal .modal-header {
+    flex: 0 0 auto !important;
+}
+
+#roomModal .modal-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: calc(80vh - 150px) !important;
+}
+
+#roomModal .modal-footer {
+    flex: 0 0 auto !important;
+}
+
+
+/* ==================== TENANT INFO ==================== */
+.tenant-info {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid #ffc107;
+}
+
+.tenant-badge {
+    font-weight: 600;
+    color: #856404;
+    margin-bottom: 6px;
+}
+
+.tenant-badge i {
+    color: #ffc107;
+}
+
+.tenant-info small {
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.tenant-info small i {
+    width: 16px;
+    color: #6c757d;
+}
+
+/* Room actions with tenant */
+.room-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.room-actions .btn-sm {
+    flex: 1;
+    min-width: 100px;
+}
+
+/* Status badges */
+.badge.text-bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+/* Tenant modal */
+#tenantModal .modal-header {
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+#tenantModal .modal-body {
+    padding: 1.5rem;
+}
+
+#tenantModal .modal-footer {
+    border-top: none;
+    padding: 1.5rem;
+    gap: 10px;
+}
+
+#tenantModal .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2d3436;
+}
+
+#tenantModal .form-label i {
+    color: #28a745;
+    margin-right: 4px;
+}
+
+#tenantModal .form-control-lg {
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+#tenantModal .form-control-lg:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+#tenantModal .alert-info {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    border-radius: 8px;
+    border-left: 4px solid #17a2b8;
+}
+
+#tenantModal .btn-lg {
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+#tenantModal .modal-footer .btn {
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+#tenantModal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+#tenantModal .modal-lg {
+    max-width: 700px;
+}
+
+
+/* User info section in tenant modal */
+#userInfoSection {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#tenantModal .input-group .btn {
+    border-radius: 0 8px 8px 0;
+}
+
+#tenantModal .input-group .form-control {
+    border-radius: 8px 0 0 8px;
+}
+
+#tenantModal .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1rem;
+}
+
+#tenantModal input[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}

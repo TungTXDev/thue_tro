@@ -34,4 +34,58 @@ const createReview = async (req, res) => {
   }
 };
 
-module.exports = { getReviewsByRoomId, createReview };
+const updateReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { stars, content } = req.body;
+
+    if (stars && (stars < 1 || stars > 5)) {
+      return sendError(res, "stars must be from 1 to 5", null, 400);
+    }
+
+    const review = await Review.findById(id);
+    if (!review) {
+      return sendError(res, "Review not found", null, 404);
+    }
+
+    // Check if user owns this review
+    if (req.user && review.userId && review.userId.toString() !== req.user._id.toString()) {
+      return sendError(res, "You can only edit your own reviews", null, 403);
+    }
+
+    if (stars) review.stars = stars;
+    if (content) review.content = content;
+
+    await review.save();
+
+    return sendSuccess(res, "Review updated successfully", { review });
+  } catch (error) {
+    console.error("Update review error:", error);
+    return sendError(res, "Server error while updating review", null, 500);
+  }
+};
+
+const deleteReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const review = await Review.findById(id);
+    if (!review) {
+      return sendError(res, "Review not found", null, 404);
+    }
+
+    // Check if user owns this review
+    if (req.user && review.userId && review.userId.toString() !== req.user._id.toString()) {
+      return sendError(res, "You can only delete your own reviews", null, 403);
+    }
+
+    await Review.findByIdAndDelete(id);
+
+    return sendSuccess(res, "Review deleted successfully");
+  } catch (error) {
+    console.error("Delete review error:", error);
+    return sendError(res, "Server error while deleting review", null, 500);
+  }
+};
+
+module.exports = { getReviewsByRoomId, createReview, updateReview, deleteReview };

@@ -2,7 +2,7 @@
 async function renderRooms(dataToRender = null) {
     const roomGrid = document.getElementById('room-grid');
     if (!roomGrid) return; // Nếu không ở trang chủ thì không chạy
-    
+
     let rooms = [];
 
     // Nếu truyền dữ liệu vào thì dùng dữ liệu đó
@@ -19,8 +19,23 @@ async function renderRooms(dataToRender = null) {
             rooms = getStorage(STORAGE_KEYS.ROOMS_DATA, []);
         }
     }
-    
-    roomGrid.innerHTML = ''; 
+
+    // Get user's bookmarked rooms
+    let bookmarkedRoomIds = [];
+    const token = localStorage.getItem('authToken'); // Lấy token trực tiếp
+    if (token) {
+        try {
+            const bookmarksResponse = await apiClient('/users/bookmarks/list/all', {
+                method: 'GET',
+                requireAuth: true
+            });
+            bookmarkedRoomIds = bookmarksResponse.data.rooms.map(room => room._id || room.id);
+        } catch (error) {
+            console.warn("Could not fetch bookmarks:", error);
+        }
+    }
+
+    roomGrid.innerHTML = '';
 
     // Nếu danh sách trống 
     if (!rooms || rooms.length === 0) {
@@ -30,23 +45,119 @@ async function renderRooms(dataToRender = null) {
 
     rooms.forEach(room => {
         const priceFormatted = formatVND(room.price);
+        const roomId = room._id || room.id; // Ưu tiên _id từ MongoDB, fallback sang id
+
+        // Fix image path - thêm images/ nếu chưa có và không phải URL
+        let imagePath = room.image;
+        if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('images/')) {
+            imagePath = 'images/' + imagePath;
+        }
+
+        // Calculate image count
+        const imageCount = room.images && room.images.length > 0 ? room.images.length : 1;
+
+        // Calculate price per m2 if area is available
+        const pricePerM2 = room.area ? Math.round(room.price / room.area) : null;
+        const pricePerM2Formatted = pricePerM2 ? formatVND(pricePerM2) : '';
+
+        // Calculate days posted (mock data - you can replace with actual createdAt)
+        const daysPosted = Math.floor(Math.random() * 5) + 1; // Random 1-5 days for demo
+
+        // Get room specs
+        const bedrooms = room.bedrooms || 1;
+        const bathrooms = room.bathrooms || 1;
+        const area = room.area || 25;
+
+        // Check if room is bookmarked
+        const isBookmarked = bookmarkedRoomIds.includes(roomId);
+        const bookmarkClass = isBookmarked ? 'bookmarked' : '';
+        const bookmarkIcon = isBookmarked ? 'bi-bookmark-heart-fill' : 'bi-bookmark-heart';
 
         const cardHTML = `
-            <div class="card h-100 shadow-sm">
-                <a href="detail.html?id=${room.id}">
-                    <img src="${escapeHTML(room.image)}" alt="Ảnh phòng" class="card-img-top cursor-pointer">
-                </a>
-                <div class="card-body">
-                    <span class="card-category badge text-bg-warning">${escapeHTML(room.category)}</span>
-                    <h3 class="card-title">${escapeHTML(room.title)}</h3>
-                    <p class="card-location"><i class="bi bi-geo-alt"></i> ${escapeHTML(room.district)}</p>
-                    <div class="card-price">${priceFormatted}<span class="price-format"> / tháng</span></div>
-                    <a href="detail.html?id=${room.id}" class="btn-detail btn btn-outline-primary btn-sm">Xem chi tiết</a>
+            <div class="room-card">
+                <div class="room-card-image-wrapper">
+                    <div class="room-card-badge">
+                        <i class="bi bi-patch-check-fill"></i>
+                        Tin đáng chất lượng
+                    </div>
+                    <img src="${escapeHTML(imagePath)}" alt="${escapeHTML(room.title)}" class="room-card-image" onclick="window.location.href='detail.html?id=${roomId}'">
+                    <div class="room-card-image-counter">
+                        <i class="bi bi-camera-fill"></i>
+                        1/${imageCount}
+                    </div>
+                    <button class="bookmark-btn ${bookmarkClass}" onclick="toggleBookmark('${roomId}', this)" title="${isBookmarked ? 'Bỏ lưu' : 'Lưu phòng'}">
+                        <i class="bi ${bookmarkIcon}"></i>
+                    </button>
+                    <button class="room-card-nav room-card-nav-prev" onclick="event.stopPropagation()">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button class="room-card-nav room-card-nav-next" onclick="event.stopPropagation()">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="room-card-body" onclick="window.location.href='detail.html?id=${roomId}'">
+                    <div class="room-card-price-row">
+                        <div>
+                            <span class="room-card-price">${priceFormatted}</span>
+                            ${pricePerM2 ? `<span class="room-card-price-unit"> · ${pricePerM2Formatted}/m²</span>` : ''}
+                        </div>
+                        <div class="room-card-posted">đăng ${daysPosted} ngày trước</div>
+                    </div>
+                    <h3 class="room-card-title">${escapeHTML(room.title)}</h3>
+                    <div class="room-card-location">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        ${escapeHTML(room.district)}
+                    </div>
+                    <div class="room-card-specs">
+                        <div class="room-card-spec">
+                            <i class="bi bi-door-closed"></i>
+                            ${bedrooms} PN
+                        </div>
+                        <div class="room-card-spec">
+                            <i class="bi bi-droplet"></i>
+                            ${bathrooms}
+                        </div>
+                        <div class="room-card-spec">
+                            <i class="bi bi-arrows-angle-expand"></i>
+                            ${area} m²
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
         roomGrid.innerHTML += cardHTML;
     });
+}
+
+async function toggleBookmark(roomId, buttonElement) {
+    const token = localStorage.getItem('authToken'); // Lấy token trực tiếp, không qua getStorage
+
+    if (!token) {
+        openAuthModal();
+        return;
+    }
+
+    try {
+        const response = await apiClient(`/users/bookmarks/${roomId}`, {
+            method: 'POST',
+            requireAuth: true
+        });
+
+        if (response.data.bookmarked) {
+            buttonElement.classList.add('bookmarked');
+            buttonElement.innerHTML = '<i class="bi bi-bookmark-heart-fill"></i>';
+            buttonElement.title = 'Bỏ lưu';
+            showToast('Đã lưu phòng vào danh sách yêu thích', 'success');
+        } else {
+            buttonElement.classList.remove('bookmarked');
+            buttonElement.innerHTML = '<i class="bi bi-bookmark-heart"></i>';
+            buttonElement.title = 'Lưu phòng';
+            showToast('Đã bỏ lưu phòng', 'success');
+        }
+    } catch (error) {
+        console.error('Error toggling bookmark:', error);
+        showToast(error.message || 'Có lỗi xảy ra', 'error');
+    }
 }
 
 // TÌM KIẾM VÀ LỌC
@@ -67,7 +178,7 @@ async function filterRooms() {
         let queryParams = {};
         if (searchText) queryParams.search = searchText;
         if (typeFilter !== 'all') queryParams.category = typeFilter;
-        
+
         if (priceFilter === 'under2') {
             queryParams.maxPrice = 2000000;
         } else if (priceFilter === '2to3') {
@@ -121,3 +232,4 @@ function setupFilterEvents() {
 window.renderRooms = renderRooms;
 window.filterRooms = filterRooms;
 window.setupFilterEvents = setupFilterEvents;
+window.toggleBookmark = toggleBookmark;

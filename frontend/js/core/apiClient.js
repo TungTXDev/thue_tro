@@ -6,7 +6,7 @@ const BASE_API_URL = "http://localhost:4000/api";
  */
 async function fetchAPI(endpoint, options = {}) {
     const url = `${BASE_API_URL}${endpoint}`;
-    
+
     // Khởi tạo headers mặc định
     const headers = {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ async function fetchAPI(endpoint, options = {}) {
 
     try {
         const response = await fetch(url, config);
-        
+
         // Phân tích dữ liệu JSON trả về
         const data = await response.json().catch(() => ({}));
 
@@ -43,5 +43,24 @@ async function fetchAPI(endpoint, options = {}) {
     }
 }
 
+/**
+ * Modern API client wrapper
+ * Tương tự fetchAPI nhưng với interface đơn giản hơn
+ */
+async function apiClient(endpoint, options = {}) {
+    const { requireAuth = false, ...fetchOptions } = options;
+
+    // Kiểm tra auth nếu cần
+    if (requireAuth) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            throw new Error('Vui lòng đăng nhập để tiếp tục');
+        }
+    }
+
+    return fetchAPI(endpoint, fetchOptions);
+}
+
 window.fetchAPI = fetchAPI;
+window.apiClient = apiClient;
 window.BASE_API_URL = BASE_API_URL;

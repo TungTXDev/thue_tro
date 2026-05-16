@@ -65,10 +65,10 @@ const login = async (req, res) => {
       return sendError(res, "Email or password is incorrect", null, 401);
     }
 
-    // const isMatch = await bcrypt.compare(password, user.password);
-    // if (!isMatch) {
-    //   return sendError(res, "Email or password is incorrect", null, 401);
-    // }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return sendError(res, "Email or password is incorrect", null, 401);
+    }
 
     if (user.status === "blocked") {
       return sendError(res, "Your account has been blocked", null, 403);

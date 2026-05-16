@@ -3,7 +3,8 @@ const STORAGE_KEYS = {
     CURRENT_USER: 'currentUser',
     ROOM_REVIEWS: 'roomReviews',
     APP_COUPONS: 'appCoupons',
-    ALL_ORDERS: 'allOrders'
+    ALL_ORDERS: 'allOrders',
+    AUTH_TOKEN: 'authToken'
 };
 
 function getStorage(key, fallback = null) {
