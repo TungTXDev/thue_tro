@@ -26,7 +26,7 @@ function clearChat() {
                 <i class="bi bi-robot"></i>
             </div>
             <div class="message-text">
-                <p><strong>Xin chào! Tôi là holaBot - trợ lý AI của HolaRental 🏠✨</strong></p>
+                <p><strong>Xin chào! Tôi là holaBot - trợ lý AI của RIPT Rental 🏠✨</strong></p>
                 <p>Tôi có thể giúp bạn:</p>
                 <ul>
                     <li>🔍 Tìm kiếm nhà trọ theo địa điểm</li>
